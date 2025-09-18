@@ -15,36 +15,6 @@
             padding: 0;
         }
 
-        .loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #f0f2f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            transition: opacity 0.5s ease-in-out;
-            opacity: 1; /* Initial opacity is 1 */
-        }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid #ccc;
-            border-top-color: #2575fc;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
         .sticky-wrapper-top {
             position: sticky;
             top: 0;
@@ -571,9 +541,6 @@
     </style>
 </head>
 <body>
-    <div class="loading-screen" id="loadingScreen">
-        <div class="spinner"></div>
-    </div>
     <div class="header">
         <div class="header-content">
             <h2>কোয়ালিটি অনুযায়ী কার্ডের "টাস্ক" রাখা হয়েছে.!</h2>
@@ -666,7 +633,7 @@
 
     <script>
         const cardData = [
-        
+               
             {
                 title: "কড়া",
                 image: "https://raw.githubusercontent.com/nth-link/NTH-link/refs/heads/main/images/4.jpg",
@@ -674,20 +641,11 @@
                 category: ["viral"],
                 tasks: 3
             },
+
         ];
     </script>
-
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const loadingScreen = document.getElementById('loadingScreen');
-
-            window.addEventListener('load', () => {
-                loadingScreen.style.opacity = '0';
-                setTimeout(() => {
-                    loadingScreen.style.display = 'none';
-                }, 500);
-            });
-
             const container = document.querySelector('.container');
             const categoryButtons = document.querySelectorAll('.category-bar button:not(.add-card-btn)');
             const addCardBtn = document.querySelector('.add-card-btn');
@@ -706,6 +664,8 @@
             let wrongPasswordCount = 0;
             const lockoutDuration = 5 * 60 * 1000;
             
+            // This Map will store the temporary state of tasks
+            let cardTaskState = new Map();
 
             function showNotification(message, duration = 3000, target = notificationPopup) {
                 target.textContent = message;
@@ -802,8 +762,9 @@
                 card.setAttribute('data-video-link', data.videoLink);
                 card.setAttribute('data-category', data.category.join(','));
                 card.setAttribute('data-tasks', data.tasks);
-
-                const currentTasks = localStorage.getItem(`tasks-${data.videoLink}`) ? parseInt(localStorage.getItem(`tasks-${data.videoLink}`), 10) : data.tasks;
+                
+                // Get the current task count from our temporary Map, or use the initial count
+                const currentTasks = cardTaskState.get(data.videoLink) ?? data.tasks;
                 const isCompleted = currentTasks === 0;
 
                 card.innerHTML = `
@@ -844,7 +805,8 @@
                 const videoLink = card.dataset.videoLink;
                 const totalTasks = parseInt(card.dataset.tasks, 10);
                 
-                let currentTasks = localStorage.getItem(`tasks-${videoLink}`) ? parseInt(localStorage.getItem(`tasks-${videoLink}`), 10) : totalTasks;
+                // Get current tasks from the temporary Map
+                let currentTasks = cardTaskState.get(videoLink) ?? totalTasks;
 
                 const isTaskCompleted = button.classList.contains('task-completed');
 
@@ -857,11 +819,11 @@
                     show_9893798().then(() => {
                         if (currentTasks > 1) {
                             currentTasks--;
-                            localStorage.setItem(`tasks-${videoLink}`, currentTasks);
+                            cardTaskState.set(videoLink, currentTasks); // Save to the temporary Map
                             button.textContent = `Tasks ${currentTasks}/${totalTasks}`;
                         } else if (currentTasks === 1) {
                             currentTasks--;
-                            localStorage.setItem(`tasks-${videoLink}`, currentTasks);
+                            cardTaskState.set(videoLink, currentTasks); // Save to the temporary Map
                             button.textContent = 'Watch the Video';
                             button.classList.add('task-completed');
                         }
