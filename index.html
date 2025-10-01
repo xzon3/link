@@ -3,43 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Viral Link Market</title>
-  
-    <meta name="monetag" content="70dedd560ffd3d328b42c087c0eb7455">
-  
+    <title>Midnight Club</title>
+
+<script src='//libtl.com/sdk.js' data-zone='9893798' data-sdk='show_9893798'></script>
+
     <style>
-    /* টিউটোরিয়াল বাটনের জন্য CSS */
-.tutorial-button {
-    display: block;
-    text-align: center;
-    padding: 15px;
-    margin: 5px 20px 5px;
-    font-size: 16px;
-    font-weight: bold;
-    border-radius: 10px;
-    text-decoration: none;
-    color: #fff;
-    background-color: #2575fc;
-    transition: background-color 0.3s ease;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-/* মাউস বাটনের উপর রাখলে বা ক্লিক করলে সবুজ হবে */
-.tutorial-button:hover,
-.tutorial-button:active {
-    background-color: #28a745;
-}
-
-/* মোবাইলের জন্য স্টাইল */
-@media (max-width: 767px) {
-    .tutorial-button {
-        font-size: 14px;
-        padding: 12px;
-        margin: 5px 10px 5px;
-    }
-}
-    
-        /* CSS styles remain the same */
         body {
             font-family: sans-serif;
             background-color: #f0f2f5;
@@ -54,113 +22,27 @@
             background-color: #f0f2f5;
         }
 
-/* হেডার সেকশনের জন্য CSS */
-.header {
-    background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
-    color: #fff;
-    text-align: center;
-    padding-top: 10px; /* উপরের ফাঁকা জায়গা কমানো হয়েছে */
-    padding-bottom: 1px;
-    padding-left: 20px;
-    padding-right: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    position: relative;
-    overflow: hidden;
-}
+        .header {
+            background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
+            color: #fff;
+            text-align: center;
+            padding: 10px 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
 
-/* সোশ্যাল আইকন কন্টেইনার */
-.social-icons-container {
-    position: absolute;
-    top: 5px; /* উপরের কোণায় অবস্থান ঠিক রাখতে */
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: space-between;
-    padding: 0 10px;
-    z-index: 10;
-}
-
-.social-icon {
-    display: block;
-    width: 35px;
-    height: 35px;
-    transition: transform 0.2s ease;
-}
-
-.social-icon img {
-    width: 100%;
-    height: 100%;
-}
-
-.social-icon:hover {
-    transform: scale(1.1);
-}
-
-/* হেডার কন্টেন্ট - লেখাগুলো */
-.header-content {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding-top: 10px; /* এই মানটি এখন ঠিকভাবে কাজ করবে */
-    position: relative;
-    z-index: 5;
-}
-        
-.header h2 {
-    font-size: 16px;
-    margin: 0;
-    font-weight: bold;
-    word-wrap: break-word; 
-    overflow-wrap: break-word; 
-}
-        
-.header p {
-    font-size: 14px;
-    margin: 5px 0 0;
-    white-space: normal;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-}
-
-/* মোবাইলের জন্য CSS */
-@media (max-width: 767px) {
-    .header h2 {
-        font-size: 14px;
-    }
-    .header p {
-        font-size: 12px;
-    }
-    .social-icon {
-        width: 30px;
-        height: 30px;
-    }
-    .social-icons-container {
-        top: 5px;
-        padding: 0 5px;
-    }
-    .header-content {
-        padding-top: 10px;
-    }
-    .header {
-        padding-top: 0px;
-        padding-left: 10px;
-        padding-right: 10px;
-    }
-}
+        .header-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
 
         .header h2 {
             font-size: 16px;
             margin: 0;
             font-weight: bold;
-            word-wrap: break-word; 
-            overflow-wrap: break-word; 
-        }
-        
-        .header p {
-            font-size: 14px;
-            margin: 5px 0 0;
-            white-space: normal;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.2;
         }
 
         .category-bar {
@@ -221,117 +103,144 @@
         .add-card-btn:hover {
             background-color: #45a049;
         }
-        
+
+        .special-video-button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 15px;
+            padding: 15px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 0px;
+        }
+        .special-video-button:hover {
+            background-color: #0056b3;
+        }
+        .special-video-button.completed {
+            background-color: #28a745;
+        }
+        .special-video-button.completed:hover {
+            background-color: #218838;
+        }
+
         .container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
             gap: 15px;
             max-width: 1000px;
             margin: 0 auto;
-            padding: 10px 20px 0px;
+            padding: 10px 20px 20px;
         }
-        
+
         .card {
             background-color: #fff;
             border-radius: 15px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-            flex-grow: 1;
+            flex-grow: 1; 
             flex-shrink: 1;
             text-align: center;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
-            flex-direction: column; 
-            justify-content: space-between;
-            
+
             opacity: 0;
             transform: translateY(20px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out, box-shadow 0.3s ease, transform 0.3s ease;
-        }
-        
-        .card.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        /* আগের মতো অ্যানিমেশন */
-        .card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-        }
-        .card:active {
-            transform: scale(1.02);
-        }
-        
-        /* নতুন হাইলাইট সার্কেল স্টাইল */
-        .card.highlighted {
-            animation: highlight-pulse 1.5s infinite;
-        }
+            animation: slideUp 0.6s forwards;
 
-        @keyframes highlight-pulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.75);
-                border: 2px solid transparent;
-            }
-            50% {
-                box-shadow: 0 0 0 10px rgba(40, 167, 69, 0);
-                border: 2px solid rgba(40, 167, 69, 0.75);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
-                border: 2px solid transparent;
-            }
-        }
-        
-        /* নতুন শেয়ার আইকনের জন্য CSS */
-        .card-header {
-            position: relative;
-            width: 100%;
-        }
-
-        .share-icon {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: rgba(0, 0, 0, 0.5);
-            color: #fff;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            z-index: 5;
+            justify-content: space-between;
+            padding: 10px;
+            width: 100%;
+            box-sizing: border-box;
         }
-        
-        .share-icon:hover {
-            background-color: rgba(0, 0, 0, 0.7);
+
+        .card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
-        
-        /* নতুন আপলোড টাইম স্টাইল */
-        .card-upload-time {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background-color: rgba(0, 0, 0, 0.5);
-            color: #fff;
-            padding: 5px 8px;
-            border-radius: 5px;
-            font-size: 12px;
-            z-index: 5;
-            white-space: nowrap;
+        .card:active {
+            transform: scale(1.01);
         }
-        
-        /* .card-views ক্লাসটি সরানো হয়েছে */
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card:nth-child(50n+1) { animation-delay: 0.1s; }
+        .card:nth-child(50n+2) { animation-delay: 0.2s; }
+        .card:nth-child(50n+3) { animation-delay: 0.3s; }
+        .card:nth-child(50n+4) { animation-delay: 0.4s; }
+        .card:nth-child(50n+5) { animation-delay: 0.5s; }
+        .card:nth-child(50n+6) { animation-delay: 0.6s; }
+        .card:nth-child(50n+7) { animation-delay: 0.7s; }
+        .card:nth-child(50n+8) { animation-delay: 0.8s; }
+        .card:nth-child(50n+9) { animation-delay: 0.9s; }
+        .card:nth-child(50n+10) { animation-delay: 1.0s; }
+        .card:nth-child(50n+11) { animation-delay: 1.1s; }
+        .card:nth-child(50n+12) { animation-delay: 1.2s; }
+        .card:nth-child(50n+13) { animation-delay: 1.3s; }
+        .card:nth-child(50n+14) { animation-delay: 1.4s; }
+        .card:nth-child(50n+15) { animation-delay: 1.5s; }
+        .card:nth-child(50n+16) { animation-delay: 1.6s; }
+        .card:nth-child(50n+17) { animation-delay: 1.7s; }
+        .card:nth-child(50n+18) { animation-delay: 1.8s; }
+        .card:nth-child(50n+19) { animation-delay: 1.9s; }
+        .card:nth-child(50n+20) { animation-delay: 2.0s; }
+        .card:nth-child(50n+21) { animation-delay: 2.1s; }
+        .card:nth-child(50n+22) { animation-delay: 2.2s; }
+        .card:nth-child(50n+23) { animation-delay: 2.3s; }
+        .card:nth-child(50n+24) { animation-delay: 2.4s; }
+        .card:nth-child(50n+25) { animation-delay: 2.5s; }
+        .card:nth-child(50n+26) { animation-delay: 2.6s; }
+        .card:nth-child(50n+27) { animation-delay: 2.7s; }
+        .card:nth-child(50n+28) { animation-delay: 2.8s; }
+        .card:nth-child(50n+29) { animation-delay: 2.9s; }
+        .card:nth-child(50n+30) { animation-delay: 3.0s; }
+        .card:nth-child(50n+31) { animation-delay: 3.1s; }
+        .card:nth-child(50n+32) { animation-delay: 3.2s; }
+        .card:nth-child(50n+33) { animation-delay: 3.3s; }
+        .card:nth-child(50n+34) { animation-delay: 3.4s; }
+        .card:nth-child(50n+35) { animation-delay: 3.5s; }
+        .card:nth-child(50n+36) { animation-delay: 3.6s; }
+        .card:nth-child(50n+37) { animation-delay: 3.7s; }
+        .card:nth-child(50n+38) { animation-delay: 3.8s; }
+        .card:nth-child(50n+39) { animation-delay: 3.9s; }
+        .card:nth-child(50n+40) { animation-delay: 4.0s; }
+        .card:nth-child(50n+41) { animation-delay: 4.1s; }
+        .card:nth-child(50n+42) { animation-delay: 4.2s; }
+        .card:nth-child(50n+43) { animation-delay: 4.3s; }
+        .card:nth-child(50n+44) { animation-delay: 4.4s; }
+        .card:nth-child(50n+45) { animation-delay: 4.5s; }
+        .card:nth-child(50n+46) { animation-delay: 4.6s; }
+        .card:nth-child(50n+47) { animation-delay: 4.7s; }
+        .card:nth-child(50n+48) { animation-delay: 4.8s; }
+        .card:nth-child(50n+49) { animation-delay: 4.9s; }
+        .card:nth-child(50n+50) { animation-delay: 5.0s; }
 
         .card-image-container {
-            width: 100%;
-            height: 150px; 
+            width: 70px;
+            height: 70px;
             overflow: hidden;
-            border-radius: 15px 15px 0 0;
+            flex-shrink: 0;
+            margin-right: 15px;
+            border-radius: 5px;
         }
 
         .card-image-container img {
@@ -339,14 +248,13 @@
             height: 100%;
             object-fit: cover;
         }
-        
+
         .card-content {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            text-align: center;
-            padding: 10px;
+            align-items: flex-start;
+            text-align: left;
         }
 
         .card-title {
@@ -359,11 +267,11 @@
 
         .card-divider {
             height: 1.5px;
-            width: 80%;
+            width: 90%;
             background-color: #e0e0e0;
-            margin: 5px 0 10px; /* নিচের মার্জিন বাড়ানো হয়েছে */
+            margin: 5px 0;
         }
-        
+
         .task-button {
             background-color: #ff9100;
             color: #fff;
@@ -374,25 +282,79 @@
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.1s ease;
             flex-shrink: 0;
-            width: calc(100% - 20px);
-            margin: 0 10px 10px; 
+            margin-left: 15px;
+            width: 110px;
             text-align: center;
-            white-space: nowrap;
         }
-        
+
         .task-button:hover, .task-button:active {
             background-color: #e58200;
         }
 
-        /* কন্টিনিউ বাটনের নতুন স্টাইল */
-        .task-button.continue-btn {
-            background-color: #ff9100; /* আগের মতো কমলা রঙে সেট করা হয়েছে */
+        @media (min-width: 768px) {
+            .card {
+                flex-basis: calc(100% - 15px);
+            }
         }
 
-        .task-button.continue-btn:hover {
-            background-color: #e58200; /* আগের মতো কমলা রঙে সেট করা হয়েছে */
+        @media (max-width: 767px) {
+             .header h1 {
+                font-size: 20px;
+            }
+            .header h2 {
+                font-size: 14px;
+            }
+            .container {
+                gap: 10px;
+            }
+            .card {
+                flex-basis: calc(100% - 10px);
+            }
+            .card-title {
+                font-size: 14px;
+            }
+            .task-button {
+                font-size: 12px;
+                padding: 10px 8px;
+                width: 90px;
+            }
+            .modal-content {
+                width: 95%;
+                max-width: 250px;
+                padding: 10px;
+            }
+            .form-group input, .form-group select {
+                padding: 5px;
+                font-size: 12px;
+            }
+            .form-buttons button {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+            .modal-content h2 {
+                font-size: 16px;
+                margin-bottom: 5px;
+            }
+            .form-group label {
+                font-size: 12px;
+            }
+            .code-box-container {
+                margin-top: 10px;
+            }
+            .code-box {
+                font-size: 10px;
+                padding: 5px;
+                max-height: 150px;
+            }
+            .copy-btn {
+                padding: 8px 15px;
+                font-size: 12px;
+            }
+            .special-video-button {
+                padding: 10px;
+            }
         }
-        
+
         .task-completed {
             background-color: #28a745;
         }
@@ -401,7 +363,6 @@
             background-color: #218838;
         }
 
-        /* Modal and other styles remain the same */
         .modal {
             display: none;
             position: fixed;
@@ -415,7 +376,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            
+
             position: fixed;
             top: 0;
             left: 0;
@@ -425,7 +386,7 @@
             align-items: flex-start;
             padding-top: 50px;
         }
-        
+
         .modal-content {
             background-color: #fefefe;
             padding: 20px;
@@ -493,7 +454,7 @@
             color: white;
             width: 100%;
         }
-        
+
         .code-box-container {
             margin-top: 20px;
             text-align: center;
@@ -523,47 +484,52 @@
         .copy-btn:hover {
             background-color: #0056b3;
         }
-        
+
         .notification {
             position: fixed;
             top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background-color: rgba(220, 53, 69, 0.9);
+            background-color: #dc3545;
             color: white;
-            padding: 10px 15px;
+            padding: 15px 25px;
             border-radius: 5px;
             z-index: 1002;
             opacity: 0;
             transition: opacity 0.5s ease-in-out;
-            text-align: center;
-            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
-            font-size: 14px;
-            max-width: 90%;
             white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            visibility: hidden;
-            pointer-events: none;
         }
-
         .notification.show {
             opacity: 1;
-            visibility: visible;
-            pointer-events: auto;
         }
-        
+
         .code-box-container .notification {
             position: absolute;
             top: -30px;
             padding: 5px 10px;
             font-size: 14px;
-            visibility: hidden;
-            pointer-events: none;
         }
-        .code-box-container .notification.show {
-            visibility: visible;
-            pointer-events: auto;
+
+        .notification {
+            position: fixed;
+            top: 10vh;
+            left: 50%;
+            transform: translate(-50%, 0);
+            background-color: rgba(220, 53, 69, 0.9);
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            z-index: 1002;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            font-size: 16px;
+            max-width: 90%;
+            word-wrap: break-word;
+        }
+        .notification.show {
+            opacity: 1;
         }
 
         .manual-copy-instruction {
@@ -572,288 +538,45 @@
             color: #dc3545;
             display: none;
         }
-        
-        @media (min-width: 768px) {
-            .container {
-                grid-template-columns: 1fr 1fr; 
-            }
-        }
-        
-        @media (max-width: 767px) {
-             .container {
-                grid-template-columns: 1fr 1fr; 
-                gap: 10px;
-            }
-            .header h1 {
-                font-size: 20px;
-            }
-            .header h2 {
-                font-size: 14px;
-            }
-            .header p {
-                font-size: 12px;
-            }
-            .card-title {
-                font-size: 14px;
-            }
-            .task-button {
-                font-size: 12px;
-                padding: 10px 8px;
-            }
-            .modal-content {
-                width: 95%;
-                max-width: 250px;
-                padding: 10px;
-            }
-            .form-group input, .form-group select {
-                padding: 5px;
-                font-size: 12px;
-            }
-            .form-buttons button {
-                padding: 6px 12px;
-                font-size: 12px;
-            }
-            .modal-content h2 {
-                font-size: 16px;
-                margin-bottom: 5px;
-            }
-            .form-group label {
-                font-size: 12px;
-            }
-            .code-box-container {
-                margin-top: 10px;
-            }
-            .code-box {
-                font-size: 10px;
-                padding: 5px;
-                max-height: 150px;
-            }
-            .copy-btn {
-                padding: 8px 15px;
-                font-size: 12px;
-            }
-            .card-upload-time {
-                font-size: 10px;
-                top: 8px;
-                left: 8px;
-                padding: 4px 6px;
-            }
-        }
-
-        /* Loading Bar CSS */
-        #loading-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 4px;
-            background-color: #007bff; 
-            z-index: 9999;
-            width: 0;
-            transition: width 2s linear;
-        }
-        
-        /* New Full-screen Admin Panel CSS */
-        .admin-panel-full {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #f0f2f5;
-            z-index: 1000;
-            padding: 20px;
-            box-sizing: border-box;
-            overflow-y: auto;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-        }
-
-        .admin-panel-full.show {
-            opacity: 1;
-            transform: translateY(0);
-            display: block;
-        }
-        
-        .admin-panel-content {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        .admin-panel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .admin-panel-header h2 {
-            margin: 0;
-        }
-
-        .admin-panel-actions {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .back-btn, .restart-btn {
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            color: white;
-        }
-
-        .back-btn {
-            background-color: #dc3545;
-        }
-
-        .back-btn:hover {
-            background-color: #c82333;
-        }
-
-        .restart-btn {
-            background-color: #ffc107;
-            color: #333;
-        }
-
-        .restart-btn:hover {
-            background-color: #e0a800;
-        }
-        
-        @media (max-width: 767px) {
-            .admin-panel-header {
-                flex-direction: column;
-                gap: 10px;
-            }
-            .admin-panel-actions {
-                flex-direction: column;
-                width: 100%;
-            }
-            .back-btn, .restart-btn {
-                width: 100%;
-            }
-        }
-        
-    /* Pagination CSS */
-        .pagination-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: nowrap;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            padding: 10px;
-            background-color: #f0f2f5;
-            margin: 15px 0;
-            border-radius: 10px;
-            box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
-            white-space: nowrap;
-            border-bottom: 2px solid #ddd;
-        }
-
-        .pagination-container::-webkit-scrollbar {
-            display: none;
-        }
-
-        .pagination-button {
-            background-color: #fff;
-            color: #2575fc;
-            border: 1px solid #2575fc;
-            border-radius: 5px;
-            padding: 8px 12px;
-            margin: 0 5px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            flex-shrink: 0;
-        }
-
-        .pagination-button.active {
-            background-color: #2575fc;
-            color: #fff;
-        }
-
-        .pagination-button:hover:not(.active) {
-            background-color: #e6f0ff;
-        }
-
-        .pagination-button.disabled {
-            background-color: #e0e0e0;
-            color: #888;
-            border-color: #ccc;
-            cursor: not-allowed;
-        }
     </style>
 </head>
 <body>
-    <div id="loading-bar"></div>
-
-    <div id="main-content">
-<div class="header">
-    <div class="social-icons-container">
-        <a href="https://t.me/virallink_market" target="_blank" class="social-icon left-icon">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram">
-        </a>
-        <a href="https://www.facebook.com/share/1CNyeZ9b4K/" target="_blank" class="social-icon right-icon">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" alt="Facebook">
-        </a>
+    <div class="header">
+        <div class="header-content">
+            <h2>কোয়ালিটি অনুযায়ী কার্ডের "টাস্ক" রাখা হয়েছে.!</h2>
+        </div>
     </div>
-    <div class="header-content">
-        <h2>ভাইরাল লিংক মার্কেটে আপনাকে.! 🔥"স্বাগতম"🔥</h2>
-        <p>আপনার পছন্দের কার্ডের টাক্স কমপ্লিট করে Video 🔞 দেখুন!📥! "ধন্যবাদ"</p>
+    <script type='text/javascript' src='//pl27572890.revenuecpmgate.com/91/1e/1d/911e1d9971c3f1df5ac81db66264db5c.js'></script>
+    <div class="sticky-wrapper-top">
+        <div class="category-bar">
+            <button data-category="all" class="active">All</button>
+            <button data-category="viral">Viral video 😻</button>
+            <button data-category="tiktoker">Tiktoker 😜</button>
+            <button data-category="premium">Premium 👑</button>
+            <button class="add-card-btn">+</button>
+        </div>
     </div>
-    <a href="https://youtube.com/shorts/wa8wV6NZZ6k?si=0R0QF7sxIYKMHzn" class="tutorial-button">
-        👉 Video কিভাবে দেখবেন-"Click-Tutorial" 🔞
-    </a>
-</div>
 
-        <div class="sticky-wrapper-top">
-            <div class="category-bar">
-                <button data-category="all" class="active">All</button>
-                <button data-category="viral" class="category-btn">Viral video 😻</button>
-                <button data-category="tiktoker" class="category-btn">Tiktoker 😜</button>
-                <button data-category="premium" class="category-btn">Premium 👑</button>
-                <button class="add-card-btn">+</button>
+    <div class="container">
+    </div>
+
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>Only for Admin</h2>
+            <div class="form-group">
+                <input type="password" id="passwordInput" placeholder="Password" required>
+            </div>
+            <div class="form-buttons">
+                <button id="authSubmit" class="submit">Submit</button>
             </div>
         </div>
-        
-        <div class="container"></div>
-
-        <div id="pagination-container" class="pagination-container"></div>
-        <div id="loading-sentinel" style="height: 1px;"></div>
-    
-        <div id="authModal" class="modal">
-            <div class="modal-content">
-                <span class="close-btn">&times;</span>
-                <h2>Only for Admin</h2>
-                <div class="form-group">
-                    <input type="password" id="passwordInput" placeholder="Password" required>
-                </div>
-                <div class="form-buttons">
-                    <button id="authSubmit" class="submit">Submit</button>
-                </div>
-            </div>
-        </div>
-        
-        <div id="notificationPopup" class="notification"></div>
     </div>
-    
-    <div id="admin-panel-full" class="admin-panel-full">
-        <div class="admin-panel-content">
-            <div class="admin-panel-header">
-                <h2>Add New Card</h2>
-                <div class="admin-panel-actions">
-                    <button id="restartBtn" class="restart-btn">Restart</button>
-                    <button id="backBtn" class="back-btn">Go Back</button>
-                </div>
-            </div>
+
+    <div id="addCardModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>Add New Card</h2>
             <form id="addCardForm">
                 <div class="form-group">
                     <label for="cardTitle">Title:</label>
@@ -875,155 +598,436 @@
                         <option value="premium">Premium 👑</option>
                     </select>
                 </div>
+                <div class="form-group">
+                    <label for="cardTasks">Tasks:</label>
+                    <select id="cardTasks" required>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>
+                </div>
                 <div class="form-buttons">
                     <button type="submit" class="submit">Generate Code</button>
                 </div>
             </form>
             <div id="codeResult" class="code-box-container" style="display: none;">
-                <label for="cardCodeBox">Card Code:</label>
-                <div id="cardCodeBox" class="code-box"></div>
-                <button id="copyCardCodeBtn" class="copy-btn">Copy Card Code</button>
-                <div id="cardCodeNotification" class="notification"></div>
-                
+                <label for="codeBox">Copy this code:</label>
+                <div id="codeBox" class="code-box"></div>
+                <button id="copyCodeBtn" class="copy-btn">Copy Code</button>
+                <div id="codeNotificationPopup" class="notification"></div>
                 <div id="manualCopyInstruction" class="manual-copy-instruction" style="display: none;">
                     Sorry, automatic copy failed. Please select the code above and press `Ctrl+C` (or the "Copy" option on mobile) to copy.
                 </div>
             </div>
         </div>
     </div>
-    
+
+    <div id="notificationPopup" class="notification"></div>
+
     <script>
-        // =========================================================
-        // [গুরুত্বপূর্ণ কনফিগারেশন]
-        // =========================================================
-
-        // 👇 আপনার ৩-স্টেপ ফ্লো সেকশনের ডোমেইনটি সম্পূর্ণ URL সহ এখানে বসান।
-        // উদাহরণ: "https://your-step-flow-domain.com/timer.html"
-        const THREE_STEP_FLOW_URL = "https://example.com/timer-flow.html"; // <-- আপনার ডোমেন এখানে বসাতে হবে
-
-        // ডেটা এখন সরাসরি কোডের মধ্যেই থাকবে
-        const allCardData = [
-          {
-            "id": "c8r3f9",
-            "title": "কালো খেতে শসার চাষ",
-            "image": "https://raw.githubusercontent.com/nth-link/NTH-link/refs/heads/main/images/3.jpg",
-            "videoLink": "https://drive.google.com/drive/folders/1OO7yFXHdBLIyO-YL8aTSysSTUtiGmWuz",
-            "category": ["tiktoker"],
-            "uploadTime": "2024-09-20T10:00:00.000Z" // উদাহরণ আপলোড টাইম যুক্ত করা হলো 
-          },
-          {
-            "id": "z0y4l7",
-            "title": "কুমিল্লার রসমালাই 🤤",
-            "image": "https://raw.githubusercontent.com/nth-link/NTH-link/refs/heads/main/images/2.jpg",
-            "videoLink": "https://1024terabox.com/s/1jhlU9zGUNwXtSOw3jwiIdw",
-            "category": ["viral"],
-            "uploadTime": "2024-09-30T15:30:00.000Z" // উদাহরণ আপলোড টাইম যুক্ত করা হলো
-          }
+        const cardData = [
+                        {
+                            title: "ঠা*পের তালে দু*দু দোলে  🥵",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/41.jpg?raw=true",
+                            videoLink: "http://teraboxshortlink.com/XaoEmF",
+                            category: ["viral"],
+                            tasks: 4
+                        },
+                        {
+                            title: "kora jinis 🔞",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/42.jpg?raw=true",
+                            videoLink: "http://teraboxshortlink.com/te8yHP",
+                            category: ["viral"],
+                            tasks: 3
+                        },
+                        {
+                            title: "মধু 🍯",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/43.jpg?raw=true",
+                            videoLink: "http://teraboxshortlink.com/Iq6QkD",
+                            category: ["viral"],
+                            tasks: 5
+                        },
+                        {
+                            title: "আগুন 🔥",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/44.jpg?raw=true",
+                            videoLink: "http://teraboxshortlink.com/wngxAt",
+                            category: ["viral"],
+                            tasks: 6
+                        },
+                        {
+                            title: "দোলনা 😱",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/45.jpg?raw=true",
+                            videoLink: "http://teraboxshortlink.com/oBWQhPX37",
+                            category: ["viral"],
+                            tasks: 4
+                        },
+                        {
+                            title: "Hotty 🥵",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/36.jpg?raw=true",
+                            videoLink: "http://teraboxshortlink.com/Vtk9sa",
+                            category: ["viral"],
+                            tasks: 5
+                        },
+                        {
+                            title: "kora jinis 🔞",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/37.jpg?raw=true",
+                            videoLink: "http://teraboxshortlink.com/KYv8FBO",
+                            category: ["viral"],
+                            tasks: 3
+                        },
+                        {
+                            title: "মধু 🍯",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/38.jpg?raw=true",
+                            videoLink: "http://teraboxshortlink.com/1HfOJ7G",
+                            category: ["viral"],
+                            tasks: 5
+                        },
+                        {
+                            title: "আকাশে 😱",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/39.jpg?raw=true",
+                            videoLink: "http://teraboxshortlink.com/R7s4k3s",
+                            category: ["viral"],
+                            tasks: 5
+                        },
+                        {
+                            title: "আগুন 🔥",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/40.jpg?raw=true",
+                            videoLink: "http://teraboxshortlink.com/KwIPFins16",
+                            category: ["viral"],
+                            tasks: 3
+                        },
+                        {
+                            title: "Argentina fan 🥵",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/31.jpg?raw=true",
+                            videoLink: "http://teraboxshortlink.com/DKsaFFVRic",
+                            category: ["viral"],
+                            tasks: 5
+                        },
+                        {
+                            title: "kora jinis 🔞",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/32.jpg?raw=true",
+                            videoLink: "http://teraboxshortlink.com/yypaKLBHw9",
+                            category: ["viral"],
+                            tasks: 5
+                        },
+                        {
+                            title: "স্কুল ছাত্রী 🍯",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/33.jpg?raw=true",
+                            videoLink: "http://teraboxshortlink.com/E1PWT0",
+                            category: ["viral"],
+                            tasks: 5
+                        },
+                        {
+                            title: "উফফফফ 🥵",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/34.jpg?raw=true",
+                            videoLink: "http://teraboxshortlink.com/1yjbtYdcEJ",
+                            category: ["viral"],
+                            tasks: 5
+                        },
+                        {
+                            title: "বেগুন 🍆",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/35.jpg?raw=true",
+                            videoLink: "http://teraboxshortlink.com/9XO0ZEbR",
+                            category: ["viral"],
+                            tasks: 3
+                        },
+                        {
+                            title: "আগুন 🔥",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/26.jpg?raw=true",
+                            videoLink: "http://teraboxshortlink.com/YDI566",
+                            category: ["viral"],
+                            tasks: 3
+                        },
+                        {
+                            title: "লিজেন্ডরা চিনে 🥵",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/27.jpg?raw=true",
+                            videoLink: "http://teraboxshortlink.com/m2c8T4",
+                            category: ["premium"],
+                            tasks: 7
+                        },
+                        {
+                            title: "Kora mal 🎬",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/28.jpg?raw=true",
+                            videoLink: "http://teraboxshortlink.com/YbXIRbp",
+                            category: ["viral"],
+                            tasks: 3
+                        },
+                        {
+                            title: "Nepali 🤤🍯",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/29.jpg?raw=true",
+                            videoLink: "http://teraboxshortlink.com/0uVcPh",
+                            category: ["viral"],
+                            tasks: 5
+                        },
+                        {
+                            title: "উফফফ 🥵🔞",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/30.jpg?raw=true",
+                            videoLink: "http://teraboxshortlink.com/OY6uE",
+                            category: ["viral"],
+                            tasks: 5
+                        },
+                        {
+                            title: "পার্কে বসে 🔥🥵",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/parke.jpg?raw=true",
+                            videoLink: "http://teraboxshortlink.com/wBv7u",
+                            category: ["viral"],
+                            tasks: 5
+                        },
+                                                                                                                         {
+                            title: "স্কুল ছাত্রী ১",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/21.jpg?raw=true",
+                            videoLink: "http://teraboxshortlink.com/f0GraO",
+                            category: ["viral"],
+                            tasks: 5
+                        },
+                        {
+                            title: "স্কুল ছাত্রী ২",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/22.jpg?raw=true",
+                            videoLink: "http://teraboxshortlink.com/xTI7ndN",
+                            category: ["viral"],
+                            tasks: 3
+                        },
+                        {
+                            title: "স্কুল ছাত্রী ৩",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/23.jpg?raw=true",
+                            videoLink: "http://teraboxshortlink.com/B1QKjXz",
+                            category: ["viral"],
+                            tasks: 3
+                        },
+                        {
+                            title: "স্কুল ছাত্রী ৪",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/00.jpg?raw=true",
+                            videoLink: "http://teraboxshortlink.com/qUVIX",
+                            category: ["viral"],
+                            tasks: 3
+                        },
+                        {
+                            title: "স্কুল ছাত্রী ৫",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/25.jpg?raw=true",
+                            videoLink: "http://teraboxshortlink.com/1KfvtxeK",
+                            category: ["premium"],
+                            tasks: 7
+                        },
+{
+                            title: "Video Call 🥵",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/16.jpg?raw=true",
+                            videoLink: "http://teraboxshortlink.com/ZP7fJxS3",
+                            category: ["premium"],
+                            tasks: 7
+                        },
+                        {
+                            title: "Instagram 🍯(5 viddeo)",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/17.jpg?raw=true",
+                            videoLink: "http://teraboxshortlink.com/GnYGcr",
+                            category: [" tiktoker"],
+                            tasks: 10
+                        },
+                        {
+                            title: "স্পেশাল কালেকশন 🔥",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/18.jpg?raw=true",
+                            videoLink: "http://teraboxshortlink.com/7OOHJP3",
+                            category: ["viral"],
+                            tasks: 5
+                        },
+                        {
+                            title: "Office Time 🫣",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/19.jpg?raw=true",
+                            videoLink: "http://teraboxshortlink.com/F4fVbh",
+                            category: ["premium"],
+                            tasks: 10
+                        },
+                        {
+                            title: "ক্লাসের ভিতর 🥵",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/20.jpg?raw=true",
+                            videoLink: "http://teraboxshortlink.com/cQkqTt",
+                            category: ["premium"],
+                            tasks: 10
+                        },
+{
+                            title: "🔥🔥",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/0.jpg?raw=true",
+                            videoLink: "http://teraboxshortlink.com/C1HJ701",
+                            category: ["viral"],
+                            tasks: 5
+                        },
+                        {
+                            title: "🫦🫦",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/11.jpg?raw=true",
+                            videoLink: "http://teraboxshortlink.com/yUo4Pb",
+                            category: ["viral"],
+                            tasks: 3
+                        },
+                        {
+                            title: "🥵🥵",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/13.jpg?raw=true",
+                            videoLink: "http://teraboxshortlink.com/qxtBIs2MDN",
+                            category: ["premium"],
+                            tasks: 8
+                        },
+                        {
+                            title: "🥵🎬",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/14.jpg?raw=true",
+                            videoLink: "http://teraboxshortlink.com/Fplnp",
+                            category: ["viral"],
+                            tasks: 5
+                        },
+                        {
+                            title: "🍯🤤",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/15.jpg?raw=true",
+                            videoLink: "http://teraboxshortlink.com/zDoV3",
+                            category: ["premium"],
+                            tasks: 10
+                        },
+{
+                            title: "স্কুল ফাকি দিয়ে 🥵",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/1.png?raw=true",
+                            videoLink: "https://1024terabox.com/s/1noLJqt7MLLCmSyKhx9F6Ww",
+                            category: ["viral"],
+                            tasks: 5
+                        },
+                        {
+                            title: "জঙ্গলে মঙ্গল 🫦",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/2.jpg?raw=true",
+                            videoLink: "https://1024terabox.com/s/1FK6ULG1VeVzApBT_cElYvQ",
+                            category: ["premium"],
+                            tasks: 7
+                        },
+                        {
+                            title: "কড়া জিনিস 🥵🔞",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/3.png?raw=true",
+                            videoLink: "https://1024terabox.com/s/1pNE6hpGP6WVRJTCx29VN3A",
+                            category: ["viral"],
+                            tasks: 5
+                        },
+                        {
+                            title: "মাখন 🥵🔞",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/4.jpg?raw=true",
+                            videoLink: "https://1024terabox.com/s/1tBkTVcCPx_GFhDzA89ME_A",
+                            category: ["viral"],
+                            tasks: 5
+                        },
+                        {
+                            title: "আগুন 🔥🔥",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/5.jpg?raw=true",
+                            videoLink: "https://1024terabox.com/s/1IJ6V83xVHRz_Eyw_00MvZQ",
+                            category: ["premium"],
+                            tasks: 7
+                        },
+                        {
+                            title: "ইন্সটাগ্রাম সেলিব্রিটি ৩ টা আগুন ভিডিও 🔥🔞🤯",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/6.jpg?raw=true",
+                            videoLink: "https://1024terabox.com/s/11V_0z5D4AK3AnVpiK8PJ0Q",
+                            category: ["premium"],
+                            tasks: 10
+                        },
+                        {
+                            title: "ফুলটুসি 🫦🔞",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/7.jpg?raw=true",
+                            videoLink: "https://1024terabox.com/s/1p-vW9Fnw6oSjqWVktDsquw",
+                            category: ["viral"],
+                            tasks: 5
+                        },
+                        {
+                            title: "পুড়া মাথা নষ্ট 🤯🔞",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/8.jpg?raw=true",
+                            videoLink: "https://1024terabox.com/s/19x7fs8xVaAK8z2pcIEPf7A",
+                            category: ["viral"],
+                            tasks: 5
+                        },
+                        {
+                            title: "VIP Video 🔥🥵",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/9.jpg?raw=true",
+                            videoLink: "https://1024terabox.com/s/1o-0EACZwbF-VahvgzBsIpQ",
+                            category: ["viral"],
+                            tasks: 3
+                        },
+                        {
+                            title: "কলেজের মেয়ে 🫦🔞",
+                            image: "https://github.com/fucka24/midnight-club-/blob/main/image/10.jpg?raw=true",
+                            videoLink: "https://1024terabox.com/s/1IiwSVPqkhHF5aQXXYN0vkQ",
+                            category: ["viral"],
+                            tasks: 5
+                        },
+                                                               {
+                            title: "2 Video 🎬",
+                            image: "https://raw.githubusercontent.com/fucka24/midnight-club-/refs/heads/main/image/2%20video.jpg",
+                            videoLink: "https://1024terabox.com/s/1jINZKnwekB0DSfGVFEgnSA",
+                            category: ["viral"],
+                            tasks: 5
+                        },
+                        {
+                            title: "All Collection 🎬+🖼️",
+                            image: "https://raw.githubusercontent.com/fucka24/midnight-club-/refs/heads/main/image/all%20collection.jpg",
+                            videoLink: "https://1024terabox.com/s/1mLFx-1mMNMA-U-t9clPAAg",
+                            category: ["viral"],
+                            tasks: 5
+                        },
+                        {
+                            title: "কড়া মাল  🥵🎬",
+                            image: "https://raw.githubusercontent.com/fucka24/midnight-club-/refs/heads/main/image/kora%20mal.jpg",
+                            videoLink: "https://1024terabox.com/s/1SkzxH-29AgqbcKAsvAbzjA",
+                            category: ["viral"],
+                            tasks: 3
+                        },
+                        {
+                            title: "4 pic + 3 video 🎬🖼️",
+                            image: "https://raw.githubusercontent.com/fucka24/midnight-club-/refs/heads/main/image/4%20pic%20%2B%203%20video.jpg",
+                            videoLink: "https://1024terabox.com/s/1It_BMuz9jjs5lKMExFGc7w",
+                            category: ["premium"],
+                            tasks: 7
+                        },
+                        {
+                            title: "হট বৌদি 🫦",
+                            image: "https://raw.githubusercontent.com/fucka24/midnight-club-/refs/heads/main/image/12.jpg",
+                            videoLink: "https://1024terabox.com/s/1p4T3dA1uIygIzfgwrF2zGQ",
+                            category: ["viral"],
+                            tasks: 3
+                        },
+                        {
+                            title: "দুধেল গাই 🤤🫦",
+                            image: "https://raw.githubusercontent.com/fucka24/midnight-club-/refs/heads/main/image/24.jpg",
+                            videoLink: "https://1024terabox.com/s/1lMyO1ACxq0nGj7RmxSiYIA",
+                            category: ["premium"],
+                            tasks: 7
+                        },
+                        {
+                            title: "মধু 🍯 রসমালাই 🤤",
+                            image: "https://raw.githubusercontent.com/fucka24/midnight-club-/refs/heads/main/image/Download.jpg",
+                            videoLink: "https://1024terabox.com/s/1jr30cW-H0nmnNAyZn8GCBQ",
+                            category: ["premium"],
+                            tasks: 7
+                        },
         ];
-
+    </script>
+    <script>
         document.addEventListener('DOMContentLoaded', () => {
             const container = document.querySelector('.container');
             const categoryButtons = document.querySelectorAll('.category-bar button:not(.add-card-btn)');
             const addCardBtn = document.querySelector('.add-card-btn');
             const authModal = document.getElementById('authModal');
+            const addCardModal = document.getElementById('addCardModal');
             const passwordInput = document.getElementById('passwordInput');
             const authSubmit = document.getElementById('authSubmit');
             const addCardForm = document.getElementById('addCardForm');
-            const cardTitleInput = document.getElementById('cardTitle');
-            const cardImageInput = document.getElementById('cardImage');
-            const cardVideoLinkInput = document.getElementById('cardVideoLink');
-            const cardCategorySelect = document.getElementById('cardCategory');
             const codeResultDiv = document.getElementById('codeResult');
-            const cardCodeBox = document.getElementById('cardCodeBox');
-            const copyCardCodeBtn = document.getElementById('copyCardCodeBtn');
+            const codeBox = document.getElementById('codeBox');
+            const copyCodeBtn = document.getElementById('copyCodeBtn');
             const notificationPopup = document.getElementById('notificationPopup');
-            const cardCodeNotification = document.getElementById('cardCodeNotification');
+            const codeNotificationPopup = document.getElementById('codeNotificationPopup');
             const manualCopyInstruction = document.getElementById('manualCopyInstruction');
-            const backBtn = document.getElementById('backBtn');
-            const restartBtn = document.getElementById('restartBtn');
-            const paginationContainer = document.getElementById('pagination-container');
-            
-            const password = '@@@###';
+            const password = '$';
             let wrongPasswordCount = 0;
             const lockoutDuration = 5 * 60 * 1000;
 
-            const mainContent = document.getElementById('main-content');
-            const adminPanelFull = document.getElementById('admin-panel-full');
-            const loadingBar = document.getElementById('loading-bar');
-            
-            // ইনফিনিট স্ক্রোলিংয়ের জন্য নতুন ভেরিয়েবল
-            let filteredCards = [];
-            let cardsLoaded = 0;
-            const cardsPerLoad = 10;
-            const loadingSentinel = document.getElementById('loading-sentinel');
-            let currentFilter = 'all';
-            let currentCardToHighlight = null;
-            let observer;
-
-            // নতুন: পেজিনেশনের জন্য ভেরিয়েবল
-            const cardsPerPage = 50;
-            let currentPage = 1;
-            let totalPages = 1;
-            
-            // আপলোড ডেট টাইম: সময় গণনা করার ফাংশন
-            function formatTimeAgo(timestamp) {
-                const uploadDate = new Date(timestamp);
-                const now = new Date();
-                const seconds = Math.floor((now - uploadDate) / 1000);
-            
-                let interval = seconds / 31536000; // বছর
-                if (interval > 1) {
-                    return Math.floor(interval) + " বছর আগে";
-                }
-                interval = seconds / 2592000; // মাস
-                if (interval > 1) {
-                    return Math.floor(interval) + " মাস আগে";
-                }
-                interval = seconds / 86400; // দিন
-                if (interval > 1) {
-                    return Math.floor(interval) + " দিন আগে";
-                }
-                interval = seconds / 3600; // ঘন্টা
-                if (interval > 1) {
-                    return Math.floor(interval) + " ঘন্টা আগে";
-                }
-                interval = seconds / 60; // মিনিট
-                if (interval > 1) {
-                    return Math.floor(interval) + " মিনিট আগে";
-                }
-                return "এখনই";
-            }
-
-            // ডেটা লোড করার ফাংশন
-            function loadData() {
-                loadingBar.style.width = '20%';
-                
-                filteredCards = allCardData;
-                
-                loadingBar.style.width = '60%';
-                filterAndLoadCards(currentFilter);
-                loadingBar.style.width = '100%';
-                setTimeout(() => {
-                    loadingBar.style.width = '0%';
-                }, 500);
-                
-                // প্রতি মিনিটে সময় আপডেট করার জন্য
-                setInterval(updateCardTimes, 60000);
-            }
-            
-            // কার্ডের সময় আপডেট করার ফাংশন
-            function updateCardTimes() {
-                document.querySelectorAll('.card').forEach(card => {
-                    const uploadTime = card.dataset.uploadTime;
-                    if (uploadTime) {
-                        const timeAgoText = formatTimeAgo(uploadTime);
-                        const timeElement = card.querySelector('.card-upload-time');
-                        if (timeElement) {
-                            timeElement.textContent = timeAgoText;
-                        }
-                    }
-                });
-            }
+            // This Map will store the temporary state of tasks
+            let cardTaskState = new Map();
 
             function showNotification(message, duration = 3000, target = notificationPopup) {
                 target.textContent = message;
@@ -1032,351 +1036,6 @@
                     target.classList.remove('show');
                 }, duration);
             }
-            
-            // ইউনিক আইডি জেনারেটর
-            function generateUniqueId() {
-                const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-                let result = '';
-                for (let i = 0; i < 6; i++) {
-                    result += chars.charAt(Math.floor(Math.random() * chars.length));
-                }
-                return result;
-            }
-
-            // ভিউ কাউন্টার সংক্রান্ত সকল কোড সরানো হয়েছে
-
-            function createCard(data) {
-                const card = document.createElement('div');
-                card.classList.add('card');
-                card.setAttribute('data-id', data.id);
-                // ভিডিও লিঙ্ক data অ্যাট্রিবিউটে সেট করা হয়েছে, যাতে জাভাস্ক্রিপ্ট এটি ব্যবহার করতে পারে
-                card.setAttribute('data-video-link', data.videoLink); 
-                card.setAttribute('data-category', data.category.join(','));
-                
-                // আপলোড টাইম ডেটা অ্যাট্রিবিউট হিসাবে যুক্ত করা হয়েছে
-                if (data.uploadTime) {
-                    card.setAttribute('data-upload-time', data.uploadTime);
-                }
-                
-                // আপলোড টাইম ডিসপ্লে করার এলিমেন্ট
-                const timeAgoText = data.uploadTime ? formatTimeAgo(data.uploadTime) : '';
-                
-                card.innerHTML = `
-                    <div class="card-header">
-                         <div class="share-icon" data-id="${data.id}">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-box-arrow-up" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M3.5 6a.5.5 0 0 0-.5.5v8a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5v-8a.5.5 0 0 0-.5-.5h-2a.5.5 0 0 1 0-1h2A1.5 1.5 0 0 1 14 6.5v8a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 14.5v-8A1.5 1.5 0 0 1 3.5 5h2a.5.5 0 0 1 0 1h-2z"/>
-                                <path fill-rule="evenodd" d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V9.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
-                            </svg>
-                        </div>
-                        <div class="card-upload-time">${timeAgoText}</div>
-                        <div class="card-image-container">
-                            <img src="${data.image}" alt="${data.title}" loading="lazy">
-                        </div>
-                    </div>
-                    <div class="card-content">
-                        <h3 class="card-title">${data.title}</h3>
-                        <hr class="card-divider">
-                        </div>
-                    <button class="task-button continue-btn">Continue</button>
-                `;
-                
-                // কন্টিনিউ বাটন লেখা পরিবর্তন করা হয়েছে: "Continue"
-                
-                return card;
-            }
-
-            function renderCards(start, end, clear = false) {
-                if (clear) {
-                    container.innerHTML = '';
-                }
-                
-                const cardsToRender = filteredCards.slice(start, end);
-                
-                cardsToRender.forEach(data => {
-                    const card = createCard(data);
-                    container.appendChild(card);
-                    // অ্যানিমেশনের জন্য কার্ডগুলো দৃশ্যমান করা
-                    setTimeout(() => {
-                         card.classList.add('visible');
-                         // হাইলাইট করার লজিক এখানে যুক্ত করা হয়েছে
-                         if (data.id === currentCardToHighlight) {
-                             card.classList.add('highlighted');
-                             // এখানে নতুন লজিক যুক্ত করা হয়েছে
-                             setTimeout(() => {
-                                 const headerHeight = document.querySelector('.header').offsetHeight;
-                                 const viewportHeight = window.innerHeight;
-                                 const cardTop = card.getBoundingClientRect().top;
-                                 const scrollPosition = window.scrollY + cardTop - (viewportHeight / 2) + (card.offsetHeight / 2) + (headerHeight / 2);
-            
-                                 window.scrollTo({
-                                     top: scrollPosition,
-                                     behavior: 'smooth'
-                                 });
-                             }, 200);
-                         }
-                         // getAndUpdateViews(data.id); কলটি সরানো হয়েছে
-                    }, 50); // ছোট ডিলে যোগ করা হয়েছে
-                });
-                
-                cardsLoaded = end;
-            }
-            
-            // ক্যাটাগরি ফিল্টার এবং প্রথম কার্ড লোড করার ফাংশন
-            function filterAndLoadCards(filterCategory) {
-                currentFilter = filterCategory;
-                if (filterCategory === 'all') {
-                    filteredCards = allCardData;
-                } else {
-                    filteredCards = allCardData.filter(card => card.category.includes(filterCategory));
-                }
-                
-                // পেজিনেশন আপডেট করা
-                totalPages = Math.ceil(filteredCards.length / cardsPerPage);
-                currentPage = 1;
-                renderPaginationButtons();
-                
-                // হাইলাইট কার্ড আছে কিনা তা চেক করা
-                const targetCardIndex = filteredCards.findIndex(card => card.id === currentCardToHighlight);
-                
-                if (targetCardIndex !== -1) {
-                    const targetPage = Math.floor(targetCardIndex / cardsPerPage) + 1;
-                    currentPage = targetPage;
-                    // নির্দিষ্ট কার্ডটি খুঁজে পাওয়া গেলে, সেই পর্যন্ত লোড করা
-                    loadPage(targetPage, targetCardIndex);
-                } else {
-                    // যদি কোনো কার্ড হাইলাইট করার না থাকে, তাহলে স্বাভাবিক লোড করা
-                    loadPage(currentPage);
-                }
-            }
-
-            // নির্দিষ্ট পেজ লোড করার ফাংশন
-    function loadPage(pageNumber, highlightIndex = -1) {
-    currentPage = pageNumber;
-    
-    // প্রতিবার নতুন পেজ লোড হলে cardsLoaded ভেরিয়েবলটি রিসেট করা
-    cardsLoaded = 0; 
-    
-    const startCardIndex = (currentPage - 1) * cardsPerPage;
-    const endOfPage = Math.min(startCardIndex + cardsPerPage, filteredCards.length);
-    const totalCardsToLoad = endOfPage - startCardIndex;
-    
-    // পেজ খালি করা
-    container.innerHTML = '';
-    
-    // যদি হাইলাইট কার্ড থাকে, তাহলে সেই পর্যন্ত লোড করা
-    if (highlightIndex !== -1) {
-        renderCards(startCardIndex, highlightIndex + 1, true);
-        cardsLoaded = (highlightIndex + 1) - startCardIndex;
-    } 
-    // যদি অবশিষ্ট কার্ডের সংখ্যা প্রাথমিক লোডের চেয়ে কম বা সমান হয়, তাহলে সব লোড করে ফেলা
-    else if (totalCardsToLoad <= cardsPerLoad) {
-        renderCards(startCardIndex, endOfPage, true);
-        cardsLoaded = totalCardsToLoad;
-        observer.unobserve(loadingSentinel);
-    } 
-    // অন্যথায়, প্রাথমিক ১০টি কার্ড লোড করা
-    else {
-        renderCards(startCardIndex, startCardIndex + cardsPerLoad, true);
-        cardsLoaded = cardsPerLoad;
-        observer.observe(loadingSentinel);
-    }
-
-    renderPaginationButtons();
-    
-    // পেজ লোড হলে টপে স্ক্রল করা
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-            
-            // আরও কার্ড লোড করার ফাংশন (ইনফিনিট স্ক্রোলিংয়ের জন্য)
-            function loadMoreCards() {
-                const startCardIndex = (currentPage - 1) * cardsPerPage + cardsLoaded;
-                const endCardIndex = Math.min((currentPage - 1) * cardsPerPage + cardsLoaded + cardsPerLoad, (currentPage * cardsPerPage));
-
-                if (startCardIndex < endCardIndex) {
-                    renderCards(startCardIndex, endCardIndex, false);
-                }
-            }
-            
-            // পেজিনেশন বাটন রেন্ডার করার ফাংশন
-            function renderPaginationButtons() {
-                paginationContainer.innerHTML = ''; // আগের বাটনগুলো মুছে ফেলা
-                
-                if (totalPages <= 1) return;
-
-                const prevBtn = document.createElement('button');
-                prevBtn.classList.add('pagination-button', 'prev-next');
-                prevBtn.innerHTML = `
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
-                      <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
-                    </svg>
-                `;
-                prevBtn.disabled = currentPage === 1;
-                prevBtn.addEventListener('click', () => loadPage(currentPage - 1));
-                paginationContainer.appendChild(prevBtn);
-
-                const maxButtonsToShow = 5;
-                let startPage = Math.max(1, currentPage - Math.floor(maxButtonsToShow / 2));
-                let endPage = Math.min(totalPages, startPage + maxButtonsToShow - 1);
-                
-                if (endPage - startPage + 1 < maxButtonsToShow) {
-                    startPage = Math.max(1, endPage - maxButtonsToShow + 1);
-                }
-
-                if (startPage > 1) {
-                    const firstPageBtn = document.createElement('button');
-                    firstPageBtn.textContent = '1';
-                    firstPageBtn.classList.add('pagination-button');
-                    firstPageBtn.addEventListener('click', () => loadPage(1));
-                    paginationContainer.appendChild(firstPageBtn);
-
-                    if (startPage > 2) {
-                        const dots = document.createElement('span');
-                        dots.textContent = '...';
-                        paginationContainer.appendChild(dots);
-                    }
-                }
-
-                for (let i = startPage; i <= endPage; i++) {
-                    const pageBtn = document.createElement('button');
-                    pageBtn.textContent = i;
-                    pageBtn.classList.add('pagination-button');
-                    if (i === currentPage) {
-                        pageBtn.classList.add('active');
-                    }
-                    pageBtn.addEventListener('click', () => loadPage(i));
-                    paginationContainer.appendChild(pageBtn);
-                }
-
-                if (endPage < totalPages) {
-                     if (endPage < totalPages - 1) {
-                        const dots = document.createElement('span');
-                        dots.textContent = '...';
-                        paginationContainer.appendChild(dots);
-                    }
-                    const lastPageBtn = document.createElement('button');
-                    lastPageBtn.textContent = totalPages;
-                    lastPageBtn.classList.add('pagination-button');
-                    lastPageBtn.addEventListener('click', () => loadPage(totalPages));
-                    paginationContainer.appendChild(lastPageBtn);
-                }
-                
-                const nextBtn = document.createElement('button');
-                nextBtn.classList.add('pagination-button', 'prev-next');
-                nextBtn.innerHTML = `
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
-                      <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
-                    </svg>
-                `;
-                nextBtn.disabled = currentPage === totalPages;
-                nextBtn.addEventListener('click', () => loadPage(currentPage + 1));
-                paginationContainer.appendChild(nextBtn);
-
-                updatePaginationButtons();
-            }
-
-            // পেজিনেশন বাটন আপডেট করার ফাংশন
-            function updatePaginationButtons() {
-                const buttons = paginationContainer.querySelectorAll('.pagination-button');
-                buttons.forEach(button => {
-                    button.classList.remove('active');
-                    if (button.textContent == currentPage) {
-                        button.classList.add('active');
-                    }
-                });
-            }
-            
-            // ইনফিনিট স্ক্রোলিংয়ের জন্য IntersectionObserver
-            observer = new IntersectionObserver((entries) => {
-                if (entries[0].isIntersecting) {
-                    loadMoreCards();
-                }
-            }, {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.1
-            });
-
-            // টাস্ক সিস্টেম এবং অ্যানিমেশনের জন্য ইভেন্ট লিসেনার
-            container.addEventListener('click', async (event) => {
-                const card = event.target.closest('.card');
-                const button = event.target.closest('.task-button');
-                const shareIcon = event.target.closest('.share-icon');
-
-                // হাইলাইট রিমুভ করার লজিক
-                if (button && currentCardToHighlight) {
-                    const highlightedCard = document.querySelector(`[data-id="${currentCardToHighlight}"]`);
-                    if (highlightedCard) {
-                        highlightedCard.classList.remove('highlighted');
-                    }
-                    currentCardToHighlight = null;
-                }
-                
-                if (card && !button && !shareIcon) {
-                    // কার্ডে ক্লিক করলে অ্যানিমেশন
-                    card.style.transform = 'scale(1.05)';
-                    setTimeout(() => {
-                        card.style.transform = 'scale(1)';
-                    }, 200);
-                }
-                
-                // শেয়ারিং সিস্টেম
-                if (shareIcon) {
-                    const cardId = shareIcon.dataset.id;
-                    const cardTitle = card.querySelector('.card-title').textContent;
-                    const shareUrl = `${window.location.origin}${window.location.pathname}?cardId=${cardId}`;
-                    
-                    if (navigator.share) {
-                        try {
-                            await navigator.share({
-                                title: cardTitle,
-                                text: `${cardTitle} ভাইরাল ভিডিওটি দেখতে 👇 লিংকে ক্লিক করুন!`,
-                                url: shareUrl,
-                            });
-                            showNotification('Card shared!', 2000, notificationPopup);
-                        } catch (error) {
-                            console.error('Sharing failed:', error);
-                        }
-                    } else {
-                        // যদি নেটিভ শেয়ার সাপোর্ট না থাকে, তাহলে শুধু কপি করবে
-                        copyToClipboard(shareUrl, notificationPopup);
-                    }
-                    return;
-                }
-
-                // =========================================================
-                // [লজিক: 3-স্টেপ ফ্লো ডোমেনে রিডাইরেক্ট]
-                // =========================================================
-                if (button && card && button.classList.contains('continue-btn')) {
-                    const videoLink = card.dataset.videoLink;
-                    
-                    if (THREE_STEP_FLOW_URL && THREE_STEP_FLOW_URL !== "https://example.com/timer-flow.html") {
-                        const encodedURL = encodeURIComponent(videoLink);
-                        // চূড়ান্ত ডোমেন URL তৈরি করা: ?dest=ভিডিও_লিঙ্ক
-                        const destinationURL = `${THREE_STEP_FLOW_URL}?dest=${encodedURL}`;
-                        
-                        // নতুন ট্যাবে 3-স্টেপ ফ্লো ডোমেনে রিডাইরেক্ট করা
-                        window.open(destinationURL, '_blank');
-                        
-                    } else {
-                        // যদি 3-স্টেপ ডোমেন সেট করা না থাকে
-                        alert("ERROR: দয়া করে কোডের মধ্যে THREE_STEP_FLOW_URL ভেরিয়েবলে আপনার স্টেপ সেকশন ডোমেনটি সম্পূর্ণ URL সহ বসান।");
-                        console.error("THREE_STEP_FLOW_URL is not set correctly.");
-                    }
-                }
-                // টাস্ক কমপ্লিটেড বাটন এবং অন্যান্য লজিক এই সিস্টেমের জন্য বাতিল করা হলো
-            });
-            // =========================================================
-
-            categoryButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    categoryButtons.forEach(btn => btn.classList.remove('active'));
-                    button.classList.add('active');
-                    const category = button.getAttribute('data-category');
-                    currentCardToHighlight = null; // নতুন ফিল্টার করার সময় হাইলাইট বন্ধ করা
-                    filterAndLoadCards(category);
-                });
-            });
 
             addCardBtn.addEventListener('click', () => {
                 authModal.style.display = 'flex';
@@ -1387,12 +1046,11 @@
             authSubmit.addEventListener('click', () => {
                 if (passwordInput.value === password) {
                     authModal.style.display = 'none';
-                    mainContent.style.display = 'none';
-                    adminPanelFull.classList.add('show');
+                    addCardModal.style.display = 'flex';
                     wrongPasswordCount = 0;
                 } else {
                     wrongPasswordCount++;
-                    showNotification('Only for Admin');
+                    showNotification('Only for Admin', 3000, notificationPopup);
                     passwordInput.value = '';
                     if (wrongPasswordCount >= 3) {
                         authModal.style.display = 'none';
@@ -1407,80 +1065,148 @@
 
             document.querySelectorAll('.close-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    authModal.style.display = "none";
+                    authModal.style.display = 'none';
+                    addCardModal.style.display = 'none';
                 });
-            });
-            
-            backBtn.addEventListener('click', () => {
-                adminPanelFull.classList.remove('show');
-                mainContent.style.display = 'block';
-                addCardForm.reset();
-                codeResultDiv.style.display = 'none';
-            });
-            
-            restartBtn.addEventListener('click', () => {
-                addCardForm.reset();
-                codeResultDiv.style.display = 'none';
-                showNotification('Form has been reset.', 2000, notificationPopup);
             });
 
             addCardForm.addEventListener('submit', (e) => {
                 e.preventDefault();
-                const title = cardTitleInput.value;
-                const image = cardImageInput.value;
-                const videoLink = cardVideoLinkInput.value;
-                const category = cardCategorySelect.value;
-                const newId = generateUniqueId();
-                const currentTime = new Date().toISOString();
-               
-                const newCardCode = `{
-    "id": "${newId}",
-    "title": "${title}",
-    "image": "${image}",
-    "videoLink": "${videoLink}",
-    "category": ["${category}"],
-    "uploadTime": "${currentTime}"
-},`;
-                
-                cardCodeBox.textContent = newCardCode.trim();
+                const title = document.getElementById('cardTitle').value;
+                const image = document.getElementById('cardImage').value;
+                const videoLink = document.getElementById('cardVideoLink').value;
+                const category = document.getElementById('cardCategory').value;
+                const tasks = document.getElementById('cardTasks').value;
+
+                const newCardCode = `
+                        {
+                            title: "${title}",
+                            image: "${image}",
+                            videoLink: "${videoLink}",
+                            category: ["${category}"],
+                            tasks: ${tasks}
+                        },`;
+
+                codeBox.textContent = newCardCode.trim();
                 codeResultDiv.style.display = 'block';
             });
-            
-            async function copyToClipboard(text, notificationEl) {
+
+            copyCodeBtn.addEventListener('click', async () => {
+                const code = codeBox.textContent;
                 try {
-                    await navigator.clipboard.writeText(text);
-                    showNotification('Link copied to clipboard!', 2000, notificationEl);
+                    await navigator.clipboard.writeText(code);
+                    showNotification('Code copied!', 2000, codeNotificationPopup);
                     manualCopyInstruction.style.display = 'none';
                 } catch (err) {
                     console.error('Failed to copy text: ', err);
-                    showNotification('Failed to copy.', 2000, notificationEl);
+                    showNotification('Failed to copy.', 2000, codeNotificationPopup);
+
+                    const range = document.createRange();
+                    range.selectNode(codeBox);
+                    window.getSelection().removeAllRanges();
+                    window.getSelection().addRange(range);
                     manualCopyInstruction.style.display = 'block';
                 }
-            }
-
-            copyCardCodeBtn.addEventListener('click', () => {
-                copyToClipboard(cardCodeBox.textContent, cardCodeNotification);
             });
 
             window.addEventListener('click', (event) => {
                 if (event.target == authModal) {
                     authModal.style.display = "none";
                 }
+                if (event.target == addCardModal) {
+                    addCardModal.style.display = "none";
+                }
             });
-            
-            function init() {
-                // ইউআরএল থেকে কার্ড আইডি বের করা
-                const urlParams = new URLSearchParams(window.location.search);
-                currentCardToHighlight = urlParams.get('cardId');
-                
-                 mainContent.style.display = 'block';
-                 adminPanelFull.classList.remove('show');
-                 loadData();
-                 observer.observe(loadingSentinel);
+
+            function createCard(data) {
+                const card = document.createElement('div');
+                card.classList.add('card');
+                card.setAttribute('data-video-link', data.videoLink);
+                card.setAttribute('data-category', data.category.join(','));
+                card.setAttribute('data-tasks', data.tasks);
+
+                // Get the current task count from our temporary Map, or use the initial count
+                const currentTasks = cardTaskState.get(data.videoLink) ?? data.tasks;
+                const isCompleted = currentTasks === 0;
+
+                card.innerHTML = `
+                    <div class="card-image-container">
+                        <img src="${data.image}" alt="${data.title}" loading="lazy">
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">${data.title}</h3>
+                        <hr class="card-divider">
+                    </div>
+                    <button class="task-button ${isCompleted ? 'task-completed' : ''}">
+                        ${isCompleted ? 'Watch the Video' : `Tasks ${currentTasks}/${data.tasks}`}
+                    </button>
+                `;
+                return card;
             }
-            
-              init();
+
+            function renderCards(filterCategory = 'all') {
+                container.innerHTML = '';
+
+
+                let filteredData = cardData;
+                if (filterCategory !== 'all') {
+                    filteredData = cardData.filter(card => card.category.includes(filterCategory));
+                }
+
+                filteredData.forEach(data => {
+                    const card = createCard(data);
+                    container.appendChild(card);
+                });
+            }
+
+            container.addEventListener('click', (event) => {
+                const button = event.target.closest('.task-button');
+                if (!button) return;
+
+                const card = button.closest('.card');
+                const videoLink = card.dataset.videoLink;
+                const totalTasks = parseInt(card.dataset.tasks, 10);
+
+                // Get current tasks from the temporary Map
+                let currentTasks = cardTaskState.get(videoLink) ?? totalTasks;
+
+                const isTaskCompleted = button.classList.contains('task-completed');
+
+                if (isTaskCompleted) {
+                    window.open(videoLink, '_blank');
+                    return; 
+                }
+
+                if (typeof show_9893798 === 'function') {
+                    show_9893798().then(() => {
+                        if (currentTasks > 1) {
+                            currentTasks--;
+                            cardTaskState.set(videoLink, currentTasks); // Save to the temporary Map
+                            button.textContent = `Tasks ${currentTasks}/${totalTasks}`;
+                        } else if (currentTasks === 1) {
+                            currentTasks--;
+                            cardTaskState.set(videoLink, currentTasks); // Save to the temporary Map
+                            button.textContent = 'Watch the Video';
+                            button.classList.add('task-completed');
+                        }
+                    }).catch(error => {
+                        console.error("Monetag Ad error:", error);
+                    });
+                }
             });
-     </script>
-   </body>
+
+
+            categoryButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    categoryButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    const category = button.getAttribute('data-category');
+                    renderCards(category);
+                });
+            });
+
+            renderCards();
+        });
+    </script>
+</body>
 </html>
