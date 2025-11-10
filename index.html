@@ -893,553 +893,555 @@
 
 <script>
         // =========================================================
-        // [গুরুত্বপূর্ণ কনফিগারেশন]
-        // =========================================================
+// [গুরুত্বপূর্ণ কনফিগারেশন]
+// =========================================================
 
-        // 👇 আপনার ৩-স্টেপ ফ্লো সেকশনের ডোমেইনটি সম্পূর্ণ URL সহ এখানে বসান।
-        const THREE_STEP_FLOW_URL = "https://3step-follow.blogspot.com"; // <-- আপনার ডোমেন এখানে বসাতে হবে
+// 👇 আপনার ৩-স্টেপ ফ্লো সেকশনের ডোমেইনটি সম্পূর্ণ URL সহ এখানে বসান।
+const THREE_STEP_FLOW_URL = "https://3step-follow.blogspot.com"; 
+
+// 👇 JSON ডেটা ফাইলটির URL দিন। (যদি একই ফোল্ডারে থাকে, শুধু নামই যথেষ্ট)
+const CARD_DATA_URL = "cards.json"; // <--- **এই লাইনটি যোগ করুন**
+
+// ডেটা এখন এই ভেরিয়েবলে লোড হবে
+let allCardData = []; // <--- **let ব্যবহার করুন**
+
+const password = '।';
+// =========================================================
+// [মূল কোড শুরু]
+// =========================================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    const container = document.querySelector('.container');
+    const categoryButtons = document.querySelectorAll('.category-bar button:not(.add-card-btn)');
+    const addCardBtn = document.querySelector('.add-card-btn');
+    const authModal = document.getElementById('authModal');
+    const passwordInput = document.getElementById('passwordInput');
+    const authSubmit = document.getElementById('authSubmit');
+    const addCardForm = document.getElementById('addCardForm');
+    const cardTitleInput = document.getElementById('cardTitle');
+    const cardImageInput = document.getElementById('cardImage');
+    const cardVideoLinkInput = document.getElementById('cardVideoLink');
+    const cardCategorySelect = document.getElementById('cardCategory');
+    const codeResultDiv = document.getElementById('codeResult');
+    const cardCodeBox = document.getElementById('cardCodeBox');
+    const copyCardCodeBtn = document.getElementById('copyCardCodeBtn');
+    const notificationPopup = document.getElementById('notificationPopup');
+    const cardCodeNotification = document.getElementById('cardCodeNotification');
+    const manualCopyInstruction = document.getElementById('manualCopyInstruction');
+    const backBtn = document.getElementById('backBtn');
+    const restartBtn = document.getElementById('restartBtn');
+    const paginationContainer = document.getElementById('pagination-container');
+
+    let wrongPasswordCount = 0;
+    const lockoutDuration = 5 * 60 * 1000;
+
+    const mainContent = document.getElementById('main-content');
+    const adminPanelFull = document.getElementById('admin-panel-full');
+    const loadingBar = document.getElementById('loading-bar');
+
+    // ইনফিনিট স্ক্রোলিংয়ের জন্য নতুন ভেরিয়েবল
+    let filteredCards = [];
+    let cardsLoaded = 0;
+    const cardsPerLoad = 10;
+    const loadingSentinel = document.getElementById('loading-sentinel');
+    let currentFilter = 'all';
+    let currentCardToHighlight = null;
+    let observer;
+
+    // নতুন: পেজিনেশনের জন্য ভেরিয়েবল
+    const cardsPerPage = 50;
+    let currentPage = 1;
+    let totalPages = 1;
+
+    // আপলোড ডেট টাইম: সময় গণনা করার ফাংশন
+    function formatTimeAgo(timestamp) {
+        const uploadDate = new Date(timestamp);
+        const now = new Date();
+        const seconds = Math.floor((now - uploadDate) / 1000);
+
+        let interval = seconds / 31536000; // বছর
+        if (interval > 1) {
+            return Math.floor(interval) + " বছর আগে";
+        }
+        interval = seconds / 2592000; // মাস
+        if (interval > 1) {
+            return Math.floor(interval) + " মাস আগে";
+        }
+        interval = seconds / 86400; // দিন
+        if (interval > 1) {
+            return Math.floor(interval) + " দিন আগে";
+        }
+        interval = seconds / 3600; // ঘন্টা
+        if (interval > 1) {
+            return Math.floor(interval) + " ঘন্টা আগে";
+        }
+        interval = seconds / 60; // মিনিট
+        if (interval > 1) {
+            return Math.floor(interval) + " মিনিট আগে";
+        }
+        return "এখনই";
+    }
+
+    // ডেটা লোড করার ফাংশন (পরিবর্তিত: JSON ফাইল থেকে ডেটা লোড করা হবে)
+    async function loadData() {
+        loadingBar.style.width = '20%';
         
-        // 👇 JSON ডেটা ফাইলটির URL দিন। যেহেতু ফাইলটি একই ফোল্ডারে আছে, তাই শুধু নামই যথেষ্ট।
-        const CARD_DATA_URL = "cards.json"; 
-
-        // ডেটা এখন এই ভেরিয়েবলে লোড হবে
-        let allCardData = []; 
-
-        const password = '।';
-        // =========================================================
-        // [মূল কোড শুরু]
-        // =========================================================
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const container = document.querySelector('.container');
-            const categoryButtons = document.querySelectorAll('.category-bar button:not(.add-card-btn)');
-            const addCardBtn = document.querySelector('.add-card-btn');
-            const authModal = document.getElementById('authModal');
-            const passwordInput = document.getElementById('passwordInput');
-            const authSubmit = document.getElementById('authSubmit');
-            const addCardForm = document.getElementById('addCardForm');
-            const cardTitleInput = document.getElementById('cardTitle');
-            const cardImageInput = document.getElementById('cardImage');
-            const cardVideoLinkInput = document.getElementById('cardVideoLink');
-            const cardCategorySelect = document.getElementById('cardCategory');
-            const codeResultDiv = document.getElementById('codeResult');
-            const cardCodeBox = document.getElementById('cardCodeBox');
-            const copyCardCodeBtn = document.getElementById('copyCardCodeBtn');
-            const notificationPopup = document.getElementById('notificationPopup');
-            const cardCodeNotification = document.getElementById('cardCodeNotification');
-            const manualCopyInstruction = document.getElementById('manualCopyInstruction');
-            const backBtn = document.getElementById('backBtn');
-            const restartBtn = document.getElementById('restartBtn');
-            const paginationContainer = document.getElementById('pagination-container');
-
-            let wrongPasswordCount = 0;
-            const lockoutDuration = 5 * 60 * 1000;
-
-            const mainContent = document.getElementById('main-content');
-            const adminPanelFull = document.getElementById('admin-panel-full');
-            const loadingBar = document.getElementById('loading-bar');
-
-            // ইনফিনিট স্ক্রোলিংয়ের জন্য নতুন ভেরিয়েবল
-            let filteredCards = [];
-            let cardsLoaded = 0;
-            const cardsPerLoad = 10;
-            const loadingSentinel = document.getElementById('loading-sentinel');
-            let currentFilter = 'all';
-            let currentCardToHighlight = null;
-            let observer;
-
-            // নতুন: পেজিনেশনের জন্য ভেরিয়েবল
-            const cardsPerPage = 50;
-            let currentPage = 1;
-            let totalPages = 1;
-
-            // আপলোড ডেট টাইম: সময় গণনা করার ফাংশন
-            function formatTimeAgo(timestamp) {
-                const uploadDate = new Date(timestamp);
-                const now = new Date();
-                const seconds = Math.floor((now - uploadDate) / 1000);
-
-                let interval = seconds / 31536000; // বছর
-                if (interval > 1) {
-                    return Math.floor(interval) + " বছর আগে";
-                }
-                interval = seconds / 2592000; // মাস
-                if (interval > 1) {
-                    return Math.floor(interval) + " মাস আগে";
-                }
-                interval = seconds / 86400; // দিন
-                if (interval > 1) {
-                    return Math.floor(interval) + " দিন আগে";
-                }
-                interval = seconds / 3600; // ঘন্টা
-                if (interval > 1) {
-                    return Math.floor(interval) + " ঘন্টা আগে";
-                }
-                interval = seconds / 60; // মিনিট
-                if (interval > 1) {
-                    return Math.floor(interval) + " মিনিট আগে";
-                }
-                return "এখনই";
+        try {
+            // JSON ফাইল থেকে ডেটা ফেচ করা
+            const response = await fetch(CARD_DATA_URL); // <--- **এই লাইনটি মূল পরিবর্তন**
+            if (!response.ok) {
+                // HTTP 404 (Not Found) বা অন্য কোনো ত্রুটি হলে
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
+            allCardData = await response.json();
+            
+            // ডেটা লোড হওয়ার পরে কার্ডগুলো উল্টো ক্রমে সাজানো (নতুন কার্ড উপরে)
+            allCardData.sort((a, b) => new Date(b.uploadTime) - new Date(a.uploadTime));
+        } catch (error) {
+            console.error("Error loading card data:", error);
+            // স্ক্রিনশটে দেখা এরর মেসেজটি দেখানো
+            showNotification('Error loading card data. Check console.', 5000, notificationPopup); 
+            // ডেটা লোড না হলে, একটি খালি অ্যারে ব্যবহার করা হবে
+            allCardData = []; 
+        }
 
-            // ডেটা লোড করার ফাংশন (পরিবর্তিত)
-            async function loadData() {
-                loadingBar.style.width = '20%';
-                
+        loadingBar.style.width = '60%';
+        filterAndLoadCards(currentFilter);
+        loadingBar.style.width = '100%';
+        setTimeout(() => {
+            loadingBar.style.width = '0%';
+        }, 500);
+
+        // প্রতি মিনিটে সময় আপডেট করার জন্য
+        setInterval(updateCardTimes, 60000);
+    }
+
+    // কার্ডের সময় আপডেট করার ফাংশন
+    function updateCardTimes() {
+        document.querySelectorAll('.card').forEach(card => {
+            const uploadTime = card.dataset.uploadTime;
+            if (uploadTime) {
+                const timeAgoText = formatTimeAgo(uploadTime);
+                const timeElement = card.querySelector('.card-upload-time');
+                if (timeElement) {
+                    timeElement.textContent = timeAgoText;
+                }
+            }
+        });
+    }
+
+    function showNotification(message, duration = 3000, target = notificationPopup) {
+        target.textContent = message;
+        target.classList.add('show');
+        setTimeout(() => {
+            target.classList.remove('show');
+        }, duration);
+    }
+
+    // ইউনিক আইডি জেনারেটর
+    function generateUniqueId() {
+        const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+        let result = '';
+        for (let i = 0; i < 6; i++) {
+            result += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return result;
+    }
+
+    function createCard(data) {
+        const card = document.createElement('div');
+        card.classList.add('card');
+        card.setAttribute('data-id', data.id);
+        // ভিডিও লিঙ্ক data অ্যাট্রিবিউটে সেট করা হয়েছে, যাতে জাভাস্ক্রিপ্ট এটি ব্যবহার করতে পারে
+        card.setAttribute('data-video-link', data.videoLink); 
+        card.setAttribute('data-category', data.category.join(','));
+
+        // আপলোড টাইম ডেটা অ্যাট্রিবিউট হিসাবে যুক্ত করা হয়েছে
+        if (data.uploadTime) {
+            card.setAttribute('data-upload-time', data.uploadTime);
+        }
+
+        // আপলোড টাইম ডিসপ্লে করার এলিমেন্ট
+        const timeAgoText = data.uploadTime ? formatTimeAgo(data.uploadTime) : '';
+
+        card.innerHTML = `
+            <div class="card-header">
+                 <div class="share-icon" data-id="${data.id}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-box-arrow-up" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M3.5 6a.5.5 0 0 0-.5.5v8a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5v-8a.5.5 0 0 0-.5-.5h-2a.5.5 0 0 1 0-1h2A1.5 1.5 0 0 1 14 6.5v8a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 14.5v-8A1.5 1.5 0 0 1 3.5 5h2a.5.5 0 0 1 0 1h-2z"/>
+                        <path fill-rule="evenodd" d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V9.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
+                    </svg>
+                </div>
+                <div class="card-upload-time">${timeAgoText}</div>
+                <div class="card-image-container">
+                    <img src="${data.image}" alt="${data.title}" loading="lazy">
+                </div>
+            </div>
+            <div class="card-content">
+                <h3 class="card-title">${data.title}</h3>
+                <hr class="card-divider">
+                </div>
+            <button class="task-button continue-btn">Continue</button>
+        `;
+
+        // কন্টিনিউ বাটন লেখা পরিবর্তন করা হয়েছে: "Continue"
+
+        return card;
+    }
+
+    function renderCards(start, end, clear = false) {
+        if (clear) {
+            container.innerHTML = '';
+        }
+
+        const cardsToRender = filteredCards.slice(start, end);
+
+        cardsToRender.forEach(data => {
+            const card = createCard(data);
+            container.appendChild(card);
+            // অ্যানিমেশনের জন্য কার্ডগুলো দৃশ্যমান করা
+            setTimeout(() => {
+                 card.classList.add('visible');
+                 // হাইলাইট করার লজিক এখানে যুক্ত করা হয়েছে
+                 if (data.id === currentCardToHighlight) {
+                     card.classList.add('highlighted');
+                     // এখানে নতুন লজিক যুক্ত করা হয়েছে
+                     setTimeout(() => {
+                         const headerHeight = document.querySelector('.header').offsetHeight;
+                         const viewportHeight = window.innerHeight;
+                         const cardTop = card.getBoundingClientRect().top;
+                         const scrollPosition = window.scrollY + cardTop - (viewportHeight / 2) + (card.offsetHeight / 2) + (headerHeight / 2);
+
+                         window.scrollTo({
+                             top: scrollPosition,
+                             behavior: 'smooth'
+                         });
+                     }, 200);
+                 }
+            }, 50); // ছোট ডিলে যোগ করা হয়েছে
+        });
+
+        cardsLoaded = end;
+    }
+
+    // ক্যাটাগরি ফিল্টার এবং প্রথম কার্ড লোড করার ফাংশন
+    function filterAndLoadCards(filterCategory) {
+        currentFilter = filterCategory;
+        if (filterCategory === 'all') {
+            filteredCards = allCardData;
+        } else {
+            filteredCards = allCardData.filter(card => card.category.includes(filterCategory));
+        }
+
+        // পেজিনেশন আপডেট করা
+        totalPages = Math.ceil(filteredCards.length / cardsPerPage);
+        currentPage = 1;
+        renderPaginationButtons();
+
+        // হাইলাইট কার্ড আছে কিনা তা চেক করা
+        const targetCardIndex = filteredCards.findIndex(card => card.id === currentCardToHighlight);
+
+        if (targetCardIndex !== -1) {
+            const targetPage = Math.floor(targetCardIndex / cardsPerPage) + 1;
+            currentPage = targetPage;
+            // নির্দিষ্ট কার্ডটি খুঁজে পাওয়া গেলে, সেই পর্যন্ত লোড করা
+            loadPage(targetPage, targetCardIndex);
+        } else {
+            // যদি কোনো কার্ড হাইলাইট করার না থাকে, তাহলে স্বাভাবিক লোড করা
+            loadPage(currentPage);
+        }
+    }
+
+    // নির্দিষ্ট পেজ লোড করার ফাংশন
+    function loadPage(pageNumber, highlightIndex = -1) {
+        currentPage = pageNumber;
+
+        // প্রতিবার নতুন পেজ লোড হলে cardsLoaded ভেরিয়েবলটি রিসেট করা
+        cardsLoaded = 0; 
+
+        const startCardIndex = (currentPage - 1) * cardsPerPage;
+        const endOfPage = Math.min(startCardIndex + cardsPerPage, filteredCards.length);
+        const totalCardsToLoad = endOfPage - startCardIndex;
+
+        // পেজ খালি করা
+        container.innerHTML = '';
+
+        // যদি হাইলাইট কার্ড থাকে, তাহলে সেই পর্যন্ত লোড করা
+        if (highlightIndex !== -1) {
+            renderCards(startCardIndex, highlightIndex + 1, true);
+            cardsLoaded = (highlightIndex + 1) - startCardIndex;
+        } 
+        // যদি অবশিষ্ট কার্ডের সংখ্যা প্রাথমিক লোডের চেয়ে কম বা সমান হয়, তাহলে সব লোড করে ফেলা
+        else if (totalCardsToLoad <= cardsPerLoad) {
+            renderCards(startCardIndex, endOfPage, true);
+            cardsLoaded = totalCardsToLoad;
+            observer.unobserve(loadingSentinel);
+        } 
+        // অন্যথায়, প্রাথমিক ১০টি কার্ড লোড করা
+        else {
+            renderCards(startCardIndex, startCardIndex + cardsPerLoad, true);
+            cardsLoaded = cardsPerLoad;
+            observer.observe(loadingSentinel);
+        }
+
+        renderPaginationButtons();
+
+        // পেজ লোড হলে টপে স্ক্রল করা
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // আরও কার্ড লোড করার ফাংশন (ইনফিনিট স্ক্রোলিংয়ের জন্য)
+    function loadMoreCards() {
+        const startCardIndex = (currentPage - 1) * cardsPerPage + cardsLoaded;
+        const endCardIndex = Math.min((currentPage - 1) * cardsPerPage + cardsLoaded + cardsPerLoad, (currentPage * cardsPerPage));
+
+        if (startCardIndex < endCardIndex) {
+            renderCards(startCardIndex, endCardIndex, false);
+        } else {
+            // আর কোনো কার্ড না থাকলে, ইনফিনিট স্ক্রোলিং বন্ধ করা
+            observer.unobserve(loadingSentinel);
+        }
+    }
+
+    // পেজিনেশন বাটন রেন্ডার করার ফাংশন
+    function renderPaginationButtons() {
+        paginationContainer.innerHTML = ''; // আগের বাটনগুলো মুছে ফেলা
+
+        if (totalPages <= 1) return;
+
+        const prevBtn = document.createElement('button');
+        prevBtn.classList.add('pagination-button', 'prev-next');
+        prevBtn.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+            </svg>
+        `;
+        prevBtn.disabled = currentPage === 1;
+        prevBtn.addEventListener('click', () => loadPage(currentPage - 1));
+        paginationContainer.appendChild(prevBtn);
+
+        const maxButtonsToShow = 5;
+        let startPage = Math.max(1, currentPage - Math.floor(maxButtonsToShow / 2));
+        let endPage = Math.min(totalPages, startPage + maxButtonsToShow - 1);
+
+        if (endPage - startPage + 1 < maxButtonsToShow) {
+            startPage = Math.max(1, endPage - maxButtonsToShow + 1);
+        }
+
+        if (startPage > 1) {
+            const firstPageBtn = document.createElement('button');
+            firstPageBtn.textContent = '1';
+            firstPageBtn.classList.add('pagination-button');
+            firstPageBtn.addEventListener('click', () => loadPage(1));
+            paginationContainer.appendChild(firstPageBtn);
+
+            if (startPage > 2) {
+                const dots = document.createElement('span');
+                dots.textContent = '...';
+                paginationContainer.appendChild(dots);
+            }
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            const pageBtn = document.createElement('button');
+            pageBtn.textContent = i;
+            pageBtn.classList.add('pagination-button');
+            if (i === currentPage) {
+                pageBtn.classList.add('active');
+            }
+            pageBtn.addEventListener('click', () => loadPage(i));
+            paginationContainer.appendChild(pageBtn);
+        }
+
+        if (endPage < totalPages) {
+             if (endPage < totalPages - 1) {
+                const dots = document.createElement('span');
+                dots.textContent = '...';
+                paginationContainer.appendChild(dots);
+            }
+            const lastPageBtn = document.createElement('button');
+            lastPageBtn.textContent = totalPages;
+            lastPageBtn.classList.add('pagination-button');
+            lastPageBtn.addEventListener('click', () => loadPage(totalPages));
+            paginationContainer.appendChild(lastPageBtn);
+        }
+
+        const nextBtn = document.createElement('button');
+        nextBtn.classList.add('pagination-button', 'prev-next');
+        nextBtn.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+            </svg>
+        `;
+        nextBtn.disabled = currentPage === totalPages;
+        nextBtn.addEventListener('click', () => loadPage(currentPage + 1));
+        paginationContainer.appendChild(nextBtn);
+
+        updatePaginationButtons();
+    }
+
+    // পেজিনেশন বাটন আপডেট করার ফাংশন
+    function updatePaginationButtons() {
+        const buttons = paginationContainer.querySelectorAll('.pagination-button');
+        buttons.forEach(button => {
+            button.classList.remove('active');
+            if (button.textContent == currentPage) {
+                button.classList.add('active');
+            }
+        });
+    }
+
+    // ইনফিনিট স্ক্রোলিংয়ের জন্য IntersectionObserver
+    observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+            loadMoreCards();
+        }
+    }, {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1
+    });
+
+    // টাস্ক সিস্টেম এবং অ্যানিমেশনের জন্য ইভেন্ট লিসেনার
+    container.addEventListener('click', async (event) => {
+        const card = event.target.closest('.card');
+        const button = event.target.closest('.task-button');
+        const shareIcon = event.target.closest('.share-icon');
+
+        // হাইলাইট রিমুভ করার লজিক
+        if (button && currentCardToHighlight) {
+            const highlightedCard = document.querySelector(`[data-id="${currentCardToHighlight}"]`);
+            if (highlightedCard) {
+                highlightedCard.classList.remove('highlighted');
+            }
+            currentCardToHighlight = null;
+        }
+
+        if (card && !button && !shareIcon) {
+            // কার্ডে ক্লিক করলে অ্যানিমেশন
+            card.style.transform = 'scale(1.05)';
+            setTimeout(() => {
+                card.style.transform = 'scale(1)';
+            }, 200);
+        }
+
+        // শেয়ারিং সিস্টেম
+        if (shareIcon) {
+            const cardId = shareIcon.dataset.id;
+            const cardTitle = card.querySelector('.card-title').textContent;
+            const shareUrl = `${window.location.origin}${window.location.pathname}?cardId=${cardId}`;
+
+            if (navigator.share) {
                 try {
-                    // JSON ফাইল থেকে ডেটা ফেচ করা
-                    const response = await fetch(CARD_DATA_URL);
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    allCardData = await response.json();
-                    
-                    // ডেটা লোড হওয়ার পরে কার্ডগুলো উল্টো ক্রমে সাজানো (নতুন কার্ড উপরে)
-                    allCardData.sort((a, b) => new Date(b.uploadTime) - new Date(a.uploadTime));
+                    await navigator.share({
+                        title: cardTitle,
+                        text: `${cardTitle} ভাইরাল ভিডিওটি দেখতে 👇 লিংকে ক্লিক করুন!`,
+                        url: shareUrl,
+                    });
+                    showNotification('Card shared!', 2000, notificationPopup);
                 } catch (error) {
-                    console.error("Error loading card data:", error);
-                    showNotification('Error loading card data. Check console.', 5000, notificationPopup);
-                    // ডেটা লোড না হলে, একটি খালি অ্যারে ব্যবহার করা হবে
-                    allCardData = []; 
+                    console.error('Sharing failed:', error);
                 }
+            } else {
+                // যদি নেটিভ শেয়ার সাপোর্ট না থাকে, তাহলে শুধু কপি করবে
+                copyToClipboard(shareUrl, notificationPopup);
+            }
+            return;
+        }
 
-                loadingBar.style.width = '60%';
-                filterAndLoadCards(currentFilter);
-                loadingBar.style.width = '100%';
+        // =========================================================
+        // [লজিক: 3-স্টেপ ফ্লো ডোমেনে রিডাইরেক্ট]
+        // =========================================================
+        if (button && card && button.classList.contains('continue-btn')) {
+            const videoLink = card.dataset.videoLink;
+
+            if (THREE_STEP_FLOW_URL && THREE_STEP_FLOW_URL !== "https://example.com/timer-flow.html") {
+                const encodedURL = encodeURIComponent(videoLink);
+                // চূড়ান্ত ডোমেন URL তৈরি করা: ?dest=ভিডিও_লিঙ্ক
+                const destinationURL = `${THREE_STEP_FLOW_URL}?dest=${encodedURL}`;
+
+                // নতুন ট্যাবে 3-স্টেপ ফ্লো ডোমেনে রিডাইরেক্ট করা
+                window.open(destinationURL, '_blank');
+
+            } else {
+                // যদি 3-স্টেপ ডোমেন সেট করা না থাকে
+                alert("ERROR: দয়া করে কোডের মধ্যে THREE_STEP_FLOW_URL ভেরিয়েবলে আপনার স্টেপ সেকশন ডোমেনটি সম্পূর্ণ URL সহ বসান।");
+                console.error("THREE_STEP_FLOW_URL is not set correctly.");
+            }
+        }
+    });
+    // =========================================================
+
+    categoryButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            categoryButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            const category = button.getAttribute('data-category');
+            currentCardToHighlight = null; // নতুন ফিল্টার করার সময় হাইলাইট বন্ধ করা
+            filterAndLoadCards(category);
+        });
+    });
+
+    addCardBtn.addEventListener('click', () => {
+        authModal.style.display = 'flex';
+        passwordInput.value = '';
+        passwordInput.focus();
+    });
+
+    authSubmit.addEventListener('click', () => {
+        if (passwordInput.value === password) {
+            authModal.style.display = 'none';
+            mainContent.style.display = 'none';
+            adminPanelFull.classList.add('show');
+            wrongPasswordCount = 0;
+        } else {
+            wrongPasswordCount++;
+            showNotification('Only for Admin');
+            passwordInput.value = '';
+            if (wrongPasswordCount >= 3) {
+                authModal.style.display = 'none';
+                addCardBtn.style.display = 'none';
                 setTimeout(() => {
-                    loadingBar.style.width = '0%';
-                }, 500);
-
-                // প্রতি মিনিটে সময় আপডেট করার জন্য
-                setInterval(updateCardTimes, 60000);
-            }
-
-            // কার্ডের সময় আপডেট করার ফাংশন
-            function updateCardTimes() {
-                document.querySelectorAll('.card').forEach(card => {
-                    const uploadTime = card.dataset.uploadTime;
-                    if (uploadTime) {
-                        const timeAgoText = formatTimeAgo(uploadTime);
-                        const timeElement = card.querySelector('.card-upload-time');
-                        if (timeElement) {
-                            timeElement.textContent = timeAgoText;
-                        }
-                    }
-                });
-            }
-
-            function showNotification(message, duration = 3000, target = notificationPopup) {
-                target.textContent = message;
-                target.classList.add('show');
-                setTimeout(() => {
-                    target.classList.remove('show');
-                }, duration);
-            }
-
-            // ইউনিক আইডি জেনারেটর
-            function generateUniqueId() {
-                const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-                let result = '';
-                for (let i = 0; i < 6; i++) {
-                    result += chars.charAt(Math.floor(Math.random() * chars.length));
-                }
-                return result;
-            }
-
-            function createCard(data) {
-                const card = document.createElement('div');
-                card.classList.add('card');
-                card.setAttribute('data-id', data.id);
-                // ভিডিও লিঙ্ক data অ্যাট্রিবিউটে সেট করা হয়েছে, যাতে জাভাস্ক্রিপ্ট এটি ব্যবহার করতে পারে
-                card.setAttribute('data-video-link', data.videoLink); 
-                card.setAttribute('data-category', data.category.join(','));
-
-                // আপলোড টাইম ডেটা অ্যাট্রিবিউট হিসাবে যুক্ত করা হয়েছে
-                if (data.uploadTime) {
-                    card.setAttribute('data-upload-time', data.uploadTime);
-                }
-
-                // আপলোড টাইম ডিসপ্লে করার এলিমেন্ট
-                const timeAgoText = data.uploadTime ? formatTimeAgo(data.uploadTime) : '';
-
-                card.innerHTML = `
-                    <div class="card-header">
-                         <div class="share-icon" data-id="${data.id}">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-box-arrow-up" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M3.5 6a.5.5 0 0 0-.5.5v8a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5v-8a.5.5 0 0 0-.5-.5h-2a.5.5 0 0 1 0-1h2A1.5 1.5 0 0 1 14 6.5v8a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 14.5v-8A1.5 1.5 0 0 1 3.5 5h2a.5.5 0 0 1 0 1h-2z"/>
-                                <path fill-rule="evenodd" d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V9.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
-                            </svg>
-                        </div>
-                        <div class="card-upload-time">${timeAgoText}</div>
-                        <div class="card-image-container">
-                            <img src="${data.image}" alt="${data.title}" loading="lazy">
-                        </div>
-                    </div>
-                    <div class="card-content">
-                        <h3 class="card-title">${data.title}</h3>
-                        <hr class="card-divider">
-                        </div>
-                    <button class="task-button continue-btn">Continue</button>
-                `;
-
-                // কন্টিনিউ বাটন লেখা পরিবর্তন করা হয়েছে: "Continue"
-
-                return card;
-            }
-
-            function renderCards(start, end, clear = false) {
-                if (clear) {
-                    container.innerHTML = '';
-                }
-
-                const cardsToRender = filteredCards.slice(start, end);
-
-                cardsToRender.forEach(data => {
-                    const card = createCard(data);
-                    container.appendChild(card);
-                    // অ্যানিমেশনের জন্য কার্ডগুলো দৃশ্যমান করা
-                    setTimeout(() => {
-                         card.classList.add('visible');
-                         // হাইলাইট করার লজিক এখানে যুক্ত করা হয়েছে
-                         if (data.id === currentCardToHighlight) {
-                             card.classList.add('highlighted');
-                             // এখানে নতুন লজিক যুক্ত করা হয়েছে
-                             setTimeout(() => {
-                                 const headerHeight = document.querySelector('.header').offsetHeight;
-                                 const viewportHeight = window.innerHeight;
-                                 const cardTop = card.getBoundingClientRect().top;
-                                 const scrollPosition = window.scrollY + cardTop - (viewportHeight / 2) + (card.offsetHeight / 2) + (headerHeight / 2);
-
-                                 window.scrollTo({
-                                     top: scrollPosition,
-                                     behavior: 'smooth'
-                                 });
-                             }, 200);
-                         }
-                    }, 50); // ছোট ডিলে যোগ করা হয়েছে
-                });
-
-                cardsLoaded = end;
-            }
-
-            // ক্যাটাগরি ফিল্টার এবং প্রথম কার্ড লোড করার ফাংশন
-            function filterAndLoadCards(filterCategory) {
-                currentFilter = filterCategory;
-                if (filterCategory === 'all') {
-                    filteredCards = allCardData;
-                } else {
-                    filteredCards = allCardData.filter(card => card.category.includes(filterCategory));
-                }
-
-                // পেজিনেশন আপডেট করা
-                totalPages = Math.ceil(filteredCards.length / cardsPerPage);
-                currentPage = 1;
-                renderPaginationButtons();
-
-                // হাইলাইট কার্ড আছে কিনা তা চেক করা
-                const targetCardIndex = filteredCards.findIndex(card => card.id === currentCardToHighlight);
-
-                if (targetCardIndex !== -1) {
-                    const targetPage = Math.floor(targetCardIndex / cardsPerPage) + 1;
-                    currentPage = targetPage;
-                    // নির্দিষ্ট কার্ডটি খুঁজে পাওয়া গেলে, সেই পর্যন্ত লোড করা
-                    loadPage(targetPage, targetCardIndex);
-                } else {
-                    // যদি কোনো কার্ড হাইলাইট করার না থাকে, তাহলে স্বাভাবিক লোড করা
-                    loadPage(currentPage);
-                }
-            }
-
-            // নির্দিষ্ট পেজ লোড করার ফাংশন
-            function loadPage(pageNumber, highlightIndex = -1) {
-                currentPage = pageNumber;
-
-                // প্রতিবার নতুন পেজ লোড হলে cardsLoaded ভেরিয়েবলটি রিসেট করা
-                cardsLoaded = 0; 
-
-                const startCardIndex = (currentPage - 1) * cardsPerPage;
-                const endOfPage = Math.min(startCardIndex + cardsPerPage, filteredCards.length);
-                const totalCardsToLoad = endOfPage - startCardIndex;
-
-                // পেজ খালি করা
-                container.innerHTML = '';
-
-                // যদি হাইলাইট কার্ড থাকে, তাহলে সেই পর্যন্ত লোড করা
-                if (highlightIndex !== -1) {
-                    renderCards(startCardIndex, highlightIndex + 1, true);
-                    cardsLoaded = (highlightIndex + 1) - startCardIndex;
-                } 
-                // যদি অবশিষ্ট কার্ডের সংখ্যা প্রাথমিক লোডের চেয়ে কম বা সমান হয়, তাহলে সব লোড করে ফেলা
-                else if (totalCardsToLoad <= cardsPerLoad) {
-                    renderCards(startCardIndex, endOfPage, true);
-                    cardsLoaded = totalCardsToLoad;
-                    observer.unobserve(loadingSentinel);
-                } 
-                // অন্যথায়, প্রাথমিক ১০টি কার্ড লোড করা
-                else {
-                    renderCards(startCardIndex, startCardIndex + cardsPerLoad, true);
-                    cardsLoaded = cardsPerLoad;
-                    observer.observe(loadingSentinel);
-                }
-
-                renderPaginationButtons();
-
-                // পেজ লোড হলে টপে স্ক্রল করা
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-
-            // আরও কার্ড লোড করার ফাংশন (ইনফিনিট স্ক্রোলিংয়ের জন্য)
-            function loadMoreCards() {
-                const startCardIndex = (currentPage - 1) * cardsPerPage + cardsLoaded;
-                const endCardIndex = Math.min((currentPage - 1) * cardsPerPage + cardsLoaded + cardsPerLoad, (currentPage * cardsPerPage));
-
-                if (startCardIndex < endCardIndex) {
-                    renderCards(startCardIndex, endCardIndex, false);
-                } else {
-                    // আর কোনো কার্ড না থাকলে, ইনফিনিট স্ক্রোলিং বন্ধ করা
-                    observer.unobserve(loadingSentinel);
-                }
-            }
-
-            // পেজিনেশন বাটন রেন্ডার করার ফাংশন
-            function renderPaginationButtons() {
-                paginationContainer.innerHTML = ''; // আগের বাটনগুলো মুছে ফেলা
-
-                if (totalPages <= 1) return;
-
-                const prevBtn = document.createElement('button');
-                prevBtn.classList.add('pagination-button', 'prev-next');
-                prevBtn.innerHTML = `
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
-                      <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
-                    </svg>
-                `;
-                prevBtn.disabled = currentPage === 1;
-                prevBtn.addEventListener('click', () => loadPage(currentPage - 1));
-                paginationContainer.appendChild(prevBtn);
-
-                const maxButtonsToShow = 5;
-                let startPage = Math.max(1, currentPage - Math.floor(maxButtonsToShow / 2));
-                let endPage = Math.min(totalPages, startPage + maxButtonsToShow - 1);
-
-                if (endPage - startPage + 1 < maxButtonsToShow) {
-                    startPage = Math.max(1, endPage - maxButtonsToShow + 1);
-                }
-
-                if (startPage > 1) {
-                    const firstPageBtn = document.createElement('button');
-                    firstPageBtn.textContent = '1';
-                    firstPageBtn.classList.add('pagination-button');
-                    firstPageBtn.addEventListener('click', () => loadPage(1));
-                    paginationContainer.appendChild(firstPageBtn);
-
-                    if (startPage > 2) {
-                        const dots = document.createElement('span');
-                        dots.textContent = '...';
-                        paginationContainer.appendChild(dots);
-                    }
-                }
-
-                for (let i = startPage; i <= endPage; i++) {
-                    const pageBtn = document.createElement('button');
-                    pageBtn.textContent = i;
-                    pageBtn.classList.add('pagination-button');
-                    if (i === currentPage) {
-                        pageBtn.classList.add('active');
-                    }
-                    pageBtn.addEventListener('click', () => loadPage(i));
-                    paginationContainer.appendChild(pageBtn);
-                }
-
-                if (endPage < totalPages) {
-                     if (endPage < totalPages - 1) {
-                        const dots = document.createElement('span');
-                        dots.textContent = '...';
-                        paginationContainer.appendChild(dots);
-                    }
-                    const lastPageBtn = document.createElement('button');
-                    lastPageBtn.textContent = totalPages;
-                    lastPageBtn.classList.add('pagination-button');
-                    lastPageBtn.addEventListener('click', () => loadPage(totalPages));
-                    paginationContainer.appendChild(lastPageBtn);
-                }
-
-                const nextBtn = document.createElement('button');
-                nextBtn.classList.add('pagination-button', 'prev-next');
-                nextBtn.innerHTML = `
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
-                      <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
-                    </svg>
-                `;
-                nextBtn.disabled = currentPage === totalPages;
-                nextBtn.addEventListener('click', () => loadPage(currentPage + 1));
-                paginationContainer.appendChild(nextBtn);
-
-                updatePaginationButtons();
-            }
-
-            // পেজিনেশন বাটন আপডেট করার ফাংশন
-            function updatePaginationButtons() {
-                const buttons = paginationContainer.querySelectorAll('.pagination-button');
-                buttons.forEach(button => {
-                    button.classList.remove('active');
-                    if (button.textContent == currentPage) {
-                        button.classList.add('active');
-                    }
-                });
-            }
-
-            // ইনফিনিট স্ক্রোলিংয়ের জন্য IntersectionObserver
-            observer = new IntersectionObserver((entries) => {
-                if (entries[0].isIntersecting) {
-                    loadMoreCards();
-                }
-            }, {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.1
-            });
-
-            // টাস্ক সিস্টেম এবং অ্যানিমেশনের জন্য ইভেন্ট লিসেনার
-            container.addEventListener('click', async (event) => {
-                const card = event.target.closest('.card');
-                const button = event.target.closest('.task-button');
-                const shareIcon = event.target.closest('.share-icon');
-
-                // হাইলাইট রিমুভ করার লজিক
-                if (button && currentCardToHighlight) {
-                    const highlightedCard = document.querySelector(`[data-id="${currentCardToHighlight}"]`);
-                    if (highlightedCard) {
-                        highlightedCard.classList.remove('highlighted');
-                    }
-                    currentCardToHighlight = null;
-                }
-
-                if (card && !button && !shareIcon) {
-                    // কার্ডে ক্লিক করলে অ্যানিমেশন
-                    card.style.transform = 'scale(1.05)';
-                    setTimeout(() => {
-                        card.style.transform = 'scale(1)';
-                    }, 200);
-                }
-
-                // শেয়ারিং সিস্টেম
-                if (shareIcon) {
-                    const cardId = shareIcon.dataset.id;
-                    const cardTitle = card.querySelector('.card-title').textContent;
-                    const shareUrl = `${window.location.origin}${window.location.pathname}?cardId=${cardId}`;
-
-                    if (navigator.share) {
-                        try {
-                            await navigator.share({
-                                title: cardTitle,
-                                text: `${cardTitle} ভাইরাল ভিডিওটি দেখতে 👇 লিংকে ক্লিক করুন!`,
-                                url: shareUrl,
-                            });
-                            showNotification('Card shared!', 2000, notificationPopup);
-                        } catch (error) {
-                            console.error('Sharing failed:', error);
-                        }
-                    } else {
-                        // যদি নেটিভ শেয়ার সাপোর্ট না থাকে, তাহলে শুধু কপি করবে
-                        copyToClipboard(shareUrl, notificationPopup);
-                    }
-                    return;
-                }
-
-                // =========================================================
-                // [লজিক: 3-স্টেপ ফ্লো ডোমেনে রিডাইরেক্ট]
-                // =========================================================
-                if (button && card && button.classList.contains('continue-btn')) {
-                    const videoLink = card.dataset.videoLink;
-
-                    if (THREE_STEP_FLOW_URL && THREE_STEP_FLOW_URL !== "https://example.com/timer-flow.html") {
-                        const encodedURL = encodeURIComponent(videoLink);
-                        // চূড়ান্ত ডোমেন URL তৈরি করা: ?dest=ভিডিও_লিঙ্ক
-                        const destinationURL = `${THREE_STEP_FLOW_URL}?dest=${encodedURL}`;
-
-                        // নতুন ট্যাবে 3-স্টেপ ফ্লো ডোমেনে রিডাইরেক্ট করা
-                        window.open(destinationURL, '_blank');
-
-                    } else {
-                        // যদি 3-স্টেপ ডোমেন সেট করা না থাকে
-                        alert("ERROR: দয়া করে কোডের মধ্যে THREE_STEP_FLOW_URL ভেরিয়েবলে আপনার স্টেপ সেকশন ডোমেনটি সম্পূর্ণ URL সহ বসান।");
-                        console.error("THREE_STEP_FLOW_URL is not set correctly.");
-                    }
-                }
-            });
-            // =========================================================
-
-            categoryButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    categoryButtons.forEach(btn => btn.classList.remove('active'));
-                    button.classList.add('active');
-                    const category = button.getAttribute('data-category');
-                    currentCardToHighlight = null; // নতুন ফিল্টার করার সময় হাইলাইট বন্ধ করা
-                    filterAndLoadCards(category);
-                });
-            });
-
-            addCardBtn.addEventListener('click', () => {
-                authModal.style.display = 'flex';
-                passwordInput.value = '';
-                passwordInput.focus();
-            });
-
-            authSubmit.addEventListener('click', () => {
-                if (passwordInput.value === password) {
-                    authModal.style.display = 'none';
-                    mainContent.style.display = 'none';
-                    adminPanelFull.classList.add('show');
+                    addCardBtn.style.display = 'flex';
                     wrongPasswordCount = 0;
-                } else {
-                    wrongPasswordCount++;
-                    showNotification('Only for Admin');
-                    passwordInput.value = '';
-                    if (wrongPasswordCount >= 3) {
-                        authModal.style.display = 'none';
-                        addCardBtn.style.display = 'none';
-                        setTimeout(() => {
-                            addCardBtn.style.display = 'flex';
-                            wrongPasswordCount = 0;
-                        }, lockoutDuration);
-                    }
-                }
-            });
+                }, lockoutDuration);
+            }
+        }
+    });
 
-            document.querySelectorAll('.close-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    authModal.style.display = "none";
-                });
-            });
+    document.querySelectorAll('.close-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            authModal.style.display = "none";
+        });
+    });
 
-            backBtn.addEventListener('click', () => {
-                adminPanelFull.classList.remove('show');
-                mainContent.style.display = 'block';
-                addCardForm.reset();
-                codeResultDiv.style.display = 'none';
-                
-                // পরিবর্তন: ডেটা আবার লোড করা, কারণ অ্যাডমিন প্যানেলে নতুন কার্ড জেনারেট হতে পারে
-                loadData(); 
-            });
+    backBtn.addEventListener('click', () => {
+        adminPanelFull.classList.remove('show');
+        mainContent.style.display = 'block';
+        addCardForm.reset();
+        codeResultDiv.style.display = 'none';
+        
+        // পরিবর্তন: ডেটা আবার লোড করা
+        loadData(); 
+    });
 
-            restartBtn.addEventListener('click', () => {
-                addCardForm.reset();
-                codeResultDiv.style.display = 'none';
-                showNotification('Form has been reset.', 2000, notificationPopup);
-            });
+    restartBtn.addEventListener('click', () => {
+        addCardForm.reset();
+        codeResultDiv.style.display = 'none';
+        showNotification('Form has been reset.', 2000, notificationPopup);
+    });
 
-            addCardForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const title = cardTitleInput.value;
-                const image = cardImageInput.value;
-                const videoLink = cardVideoLinkInput.value;
-                const category = cardCategorySelect.value;
-                const newId = generateUniqueId();
-                const currentTime = new Date().toISOString();
+    addCardForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const title = cardTitleInput.value;
+        const image = cardImageInput.value;
+        const videoLink = cardVideoLinkInput.value;
+        const category = cardCategorySelect.value;
+        const newId = generateUniqueId();
+        const currentTime = new Date().toISOString();
 
-                // নতুন কার্ডের কোড এখন JSON ফরম্যাটে জেনারেট করা হবে, যাতে এটি cards.json ফাইলে যোগ করা যায়।
-                const newCardCode = `{
+        // নতুন কার্ডের কোড এখন JSON ফরম্যাটে জেনারেট করা হবে
+        const newCardCode = `{
     "id": "${newId}",
     "title": "${title}",
     "image": "${image}",
@@ -1448,46 +1450,46 @@
     "uploadTime": "${currentTime}"
 },`;
 
-                cardCodeBox.textContent = newCardCode.trim();
-                codeResultDiv.style.display = 'block';
-            });
+        cardCodeBox.textContent = newCardCode.trim();
+        codeResultDiv.style.display = 'block';
+    });
 
-            async function copyToClipboard(text, notificationEl) {
-                try {
-                    await navigator.clipboard.writeText(text);
-                    showNotification('Link copied to clipboard!', 2000, notificationEl);
-                    manualCopyInstruction.style.display = 'none';
-                } catch (err) {
-                    console.error('Failed to copy text: ', err);
-                    showNotification('Failed to copy.', 2000, notificationEl);
-                    manualCopyInstruction.style.display = 'block';
-                }
-            }
+    async function copyToClipboard(text, notificationEl) {
+        try {
+            await navigator.clipboard.writeText(text);
+            showNotification('Link copied to clipboard!', 2000, notificationEl);
+            manualCopyInstruction.style.display = 'none';
+        } catch (err) {
+            console.error('Failed to copy text: ', err);
+            showNotification('Failed to copy.', 2000, notificationEl);
+            manualCopyInstruction.style.display = 'block';
+        }
+    }
 
-            copyCardCodeBtn.addEventListener('click', () => {
-                copyToClipboard(cardCodeBox.textContent, cardCodeNotification);
-            });
+    copyCardCodeBtn.addEventListener('click', () => {
+        copyToClipboard(cardCodeBox.textContent, cardCodeNotification);
+    });
 
-            window.addEventListener('click', (event) => {
-                if (event.target == authModal) {
-                    authModal.style.display = "none";
-                }
-            });
+    window.addEventListener('click', (event) => {
+        if (event.target == authModal) {
+            authModal.style.display = "none";
+        }
+    });
 
-            function init() {
-                // ইউআরএল থেকে কার্ড আইডি বের করা
-                const urlParams = new URLSearchParams(window.location.search);
-                currentCardToHighlight = urlParams.get('cardId');
+    function init() {
+        // ইউআরএল থেকে কার্ড আইডি বের করা
+        const urlParams = new URLSearchParams(window.location.search);
+        currentCardToHighlight = urlParams.get('cardId');
 
-                 mainContent.style.display = 'block';
-                 adminPanelFull.classList.remove('show');
-                 // ডেটা লোড করার জন্য loadData() কল করা হয়েছে
-                 loadData(); 
-                 observer.observe(loadingSentinel);
-            }
+         mainContent.style.display = 'block';
+         adminPanelFull.classList.remove('show');
+         // ডেটা লোড করার জন্য loadData() কল করা হয়েছে
+         loadData(); 
+         observer.observe(loadingSentinel);
+    }
 
-            init();
-        });
+    init();
+});
      </script>
    </body>
 </html>
