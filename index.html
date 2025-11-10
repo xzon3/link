@@ -891,22 +891,24 @@
         </div>
     </div>
 
-    <script>
+<script>
         // =========================================================
         // [গুরুত্বপূর্ণ কনফিগারেশন]
         // =========================================================
 
         // 👇 আপনার ৩-স্টেপ ফ্লো সেকশনের ডোমেইনটি সম্পূর্ণ URL সহ এখানে বসান।
-        // উদাহরণ: "https://your-step-flow-domain.com/timer.html"
         const THREE_STEP_FLOW_URL = "https://3step-follow.blogspot.com"; // <-- আপনার ডোমেন এখানে বসাতে হবে
-
-					// 👇 JSON ডেটা ফাইলটির URL দিন। যেহেতু ফাইলটি একই ফোল্ডারে আছে, তাই শুধু নামই যথেষ্ট।
+        
+        // 👇 JSON ডেটা ফাইলটির URL দিন। যেহেতু ফাইলটি একই ফোল্ডারে আছে, তাই শুধু নামই যথেষ্ট।
         const CARD_DATA_URL = "cards.json"; 
 
         // ডেটা এখন এই ভেরিয়েবলে লোড হবে
         let allCardData = []; 
 
-        //
+        const password = '।';
+        // =========================================================
+        // [মূল কোড শুরু]
+        // =========================================================
 
         document.addEventListener('DOMContentLoaded', () => {
             const container = document.querySelector('.container');
@@ -930,7 +932,6 @@
             const restartBtn = document.getElementById('restartBtn');
             const paginationContainer = document.getElementById('pagination-container');
 
-            const password = '।';
             let wrongPasswordCount = 0;
             const lockoutDuration = 5 * 60 * 1000;
 
@@ -981,11 +982,26 @@
                 return "এখনই";
             }
 
-            // ডেটা লোড করার ফাংশন
-            function loadData() {
+            // ডেটা লোড করার ফাংশন (পরিবর্তিত)
+            async function loadData() {
                 loadingBar.style.width = '20%';
-
-                filteredCards = allCardData;
+                
+                try {
+                    // JSON ফাইল থেকে ডেটা ফেচ করা
+                    const response = await fetch(CARD_DATA_URL);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    allCardData = await response.json();
+                    
+                    // ডেটা লোড হওয়ার পরে কার্ডগুলো উল্টো ক্রমে সাজানো (নতুন কার্ড উপরে)
+                    allCardData.sort((a, b) => new Date(b.uploadTime) - new Date(a.uploadTime));
+                } catch (error) {
+                    console.error("Error loading card data:", error);
+                    showNotification('Error loading card data. Check console.', 5000, notificationPopup);
+                    // ডেটা লোড না হলে, একটি খালি অ্যারে ব্যবহার করা হবে
+                    allCardData = []; 
+                }
 
                 loadingBar.style.width = '60%';
                 filterAndLoadCards(currentFilter);
@@ -1029,8 +1045,6 @@
                 }
                 return result;
             }
-
-            // ভিউ কাউন্টার সংক্রান্ত সকল কোড সরানো হয়েছে
 
             function createCard(data) {
                 const card = document.createElement('div');
@@ -1102,7 +1116,6 @@
                                  });
                              }, 200);
                          }
-                         // getAndUpdateViews(data.id); কলটি সরানো হয়েছে
                     }, 50); // ছোট ডিলে যোগ করা হয়েছে
                 });
 
@@ -1138,42 +1151,42 @@
             }
 
             // নির্দিষ্ট পেজ লোড করার ফাংশন
-    function loadPage(pageNumber, highlightIndex = -1) {
-    currentPage = pageNumber;
+            function loadPage(pageNumber, highlightIndex = -1) {
+                currentPage = pageNumber;
 
-    // প্রতিবার নতুন পেজ লোড হলে cardsLoaded ভেরিয়েবলটি রিসেট করা
-    cardsLoaded = 0; 
+                // প্রতিবার নতুন পেজ লোড হলে cardsLoaded ভেরিয়েবলটি রিসেট করা
+                cardsLoaded = 0; 
 
-    const startCardIndex = (currentPage - 1) * cardsPerPage;
-    const endOfPage = Math.min(startCardIndex + cardsPerPage, filteredCards.length);
-    const totalCardsToLoad = endOfPage - startCardIndex;
+                const startCardIndex = (currentPage - 1) * cardsPerPage;
+                const endOfPage = Math.min(startCardIndex + cardsPerPage, filteredCards.length);
+                const totalCardsToLoad = endOfPage - startCardIndex;
 
-    // পেজ খালি করা
-    container.innerHTML = '';
+                // পেজ খালি করা
+                container.innerHTML = '';
 
-    // যদি হাইলাইট কার্ড থাকে, তাহলে সেই পর্যন্ত লোড করা
-    if (highlightIndex !== -1) {
-        renderCards(startCardIndex, highlightIndex + 1, true);
-        cardsLoaded = (highlightIndex + 1) - startCardIndex;
-    } 
-    // যদি অবশিষ্ট কার্ডের সংখ্যা প্রাথমিক লোডের চেয়ে কম বা সমান হয়, তাহলে সব লোড করে ফেলা
-    else if (totalCardsToLoad <= cardsPerLoad) {
-        renderCards(startCardIndex, endOfPage, true);
-        cardsLoaded = totalCardsToLoad;
-        observer.unobserve(loadingSentinel);
-    } 
-    // অন্যথায়, প্রাথমিক ১০টি কার্ড লোড করা
-    else {
-        renderCards(startCardIndex, startCardIndex + cardsPerLoad, true);
-        cardsLoaded = cardsPerLoad;
-        observer.observe(loadingSentinel);
-    }
+                // যদি হাইলাইট কার্ড থাকে, তাহলে সেই পর্যন্ত লোড করা
+                if (highlightIndex !== -1) {
+                    renderCards(startCardIndex, highlightIndex + 1, true);
+                    cardsLoaded = (highlightIndex + 1) - startCardIndex;
+                } 
+                // যদি অবশিষ্ট কার্ডের সংখ্যা প্রাথমিক লোডের চেয়ে কম বা সমান হয়, তাহলে সব লোড করে ফেলা
+                else if (totalCardsToLoad <= cardsPerLoad) {
+                    renderCards(startCardIndex, endOfPage, true);
+                    cardsLoaded = totalCardsToLoad;
+                    observer.unobserve(loadingSentinel);
+                } 
+                // অন্যথায়, প্রাথমিক ১০টি কার্ড লোড করা
+                else {
+                    renderCards(startCardIndex, startCardIndex + cardsPerLoad, true);
+                    cardsLoaded = cardsPerLoad;
+                    observer.observe(loadingSentinel);
+                }
 
-    renderPaginationButtons();
+                renderPaginationButtons();
 
-    // পেজ লোড হলে টপে স্ক্রল করা
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
+                // পেজ লোড হলে টপে স্ক্রল করা
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
 
             // আরও কার্ড লোড করার ফাংশন (ইনফিনিট স্ক্রোলিংয়ের জন্য)
             function loadMoreCards() {
@@ -1182,6 +1195,9 @@
 
                 if (startCardIndex < endCardIndex) {
                     renderCards(startCardIndex, endCardIndex, false);
+                } else {
+                    // আর কোনো কার্ড না থাকলে, ইনফিনিট স্ক্রোলিং বন্ধ করা
+                    observer.unobserve(loadingSentinel);
                 }
             }
 
@@ -1351,7 +1367,6 @@
                         console.error("THREE_STEP_FLOW_URL is not set correctly.");
                     }
                 }
-                // টাস্ক কমপ্লিটেড বাটন এবং অন্যান্য লজিক এই সিস্টেমের জন্য বাতিল করা হলো
             });
             // =========================================================
 
@@ -1403,6 +1418,9 @@
                 mainContent.style.display = 'block';
                 addCardForm.reset();
                 codeResultDiv.style.display = 'none';
+                
+                // পরিবর্তন: ডেটা আবার লোড করা, কারণ অ্যাডমিন প্যানেলে নতুন কার্ড জেনারেট হতে পারে
+                loadData(); 
             });
 
             restartBtn.addEventListener('click', () => {
@@ -1420,6 +1438,7 @@
                 const newId = generateUniqueId();
                 const currentTime = new Date().toISOString();
 
+                // নতুন কার্ডের কোড এখন JSON ফরম্যাটে জেনারেট করা হবে, যাতে এটি cards.json ফাইলে যোগ করা যায়।
                 const newCardCode = `{
     "id": "${newId}",
     "title": "${title}",
@@ -1462,12 +1481,13 @@
 
                  mainContent.style.display = 'block';
                  adminPanelFull.classList.remove('show');
-                 loadData();
+                 // ডেটা লোড করার জন্য loadData() কল করা হয়েছে
+                 loadData(); 
                  observer.observe(loadingSentinel);
             }
 
-              init();
-            });
+            init();
+        });
      </script>
    </body>
 </html>
