@@ -539,116 +539,7 @@
       } catch { return 0; }
     })();
 
-    function getNextAdLink() {
-      if (!CONFIG.AD_LINKS.length) return '#';
-      const link = CONFIG.AD_LINKS[_adLinkIndex];
-      _adLinkIndex++;
-      if (_adLinkIndex >= CONFIG.AD_LINKS.length) {
-        _adLinkIndex = 0;
-        try { localStorage.removeItem('cv_ali'); } catch {}
-      } else {
-        try { localStorage.setItem('cv_ali', String(_adLinkIndex)); } catch {}
-      }
-      return link;
-    }
-
-    const _webPostState = new Map();
-
-    function buildWebCard(post, animDelay) {
-      const state = _webPostState.get(post.id) || { state: 'idle' };
-      const card  = document.createElement('div');
-      card.className = 'post-card';
-      card.style.animationDelay = `${animDelay * 80}ms`;
-      card.dataset.postId = post.id;
-
-      let btnHTML;
-      if (state.state === 'done') {
-        btnHTML = `<a href="${escapeHTML(post.targetLink)}" target="_blank" rel="noopener noreferrer" class="btn btn-unlocked">🎬 Go to Target Video</a>`;
-      } else {
-        btnHTML = `<button class="btn btn-task" data-action="web-task" data-post-id="${post.id}">▶ Unlock Video</button>`;
-      }
-
-      card.innerHTML = `
-        <div class="card-thumb">
-          <img src="${post.image}" alt="${escapeHTML(post.title)}" />
-          <div class="thumb-overlay"></div>
-          <span class="thumb-badge web">Premium</span>
-          <div class="thumb-play">▶</div>
-          <div class="thumb-duration">${post.duration || '0:00'}</div>
-        </div>
-        <div class="card-body">
-          <h2 class="card-title">${escapeHTML(post.title)}</h2>
-          ${btnHTML}
-        </div>
-      `;
-
-      const img = card.querySelector('img');
-      registerLazyImage(img);
-      return card;
-    }
-
-    function attachWebCardListeners(card, post) {
-      const taskBtn = card.querySelector('[data-action="web-task"]');
-      if (!taskBtn) return;
-
-      taskBtn.addEventListener('click', function onFirstClick() {
-        taskBtn.removeEventListener('click', onFirstClick);
-
-        const adLink    = getNextAdLink();
-        window.open(adLink, '_blank', 'noopener');
-
-        taskBtn.disabled  = true;
-        taskBtn.className = 'btn btn-timer';
-        taskBtn.innerHTML = `⏳ Wait 15s on ad page...`;
-
-        let clickTime       = null;
-        let timerToastEl    = null;
-        let timerIntervalId = null;
-        let userReturnedEarly = false;
-        let timerCompleted  = false;
-
-        timerToastEl = showToast('📢 Please stay on the ad page for at least 15 seconds before returning here.', 'info', 0);
-
-        let totalHiddenMs = 0;
-        let hiddenSince   = null;
-
-        function onVisibilityChange() {
-          if (document.visibilityState === 'hidden') {
-            if (!clickTime) clickTime = Date.now();
-            hiddenSince = Date.now();
-            return;
-          }
-          if (!clickTime) return;
-          if (hiddenSince) { totalHiddenMs += Date.now() - hiddenSince; hiddenSince = null; }
-          const elapsed = totalHiddenMs;
-
-          if (elapsed < CONFIG.AD_VISIBILITY_THRESHOLD_MS) {
-            userReturnedEarly = true;
-            cleanup();
-            if (timerToastEl) { timerToastEl.remove(); timerToastEl = null; }
-            showToast('🚫 You did not wait 15 seconds on the target page. Please try again.', 'error', 6000);
-            taskBtn.disabled  = false;
-            taskBtn.className = 'btn btn-task';
-            taskBtn.innerHTML = '▶ Unlock Video';
-            taskBtn.addEventListener('click', onFirstClick);
-          } else {
-            timerCompleted = true;
-            cleanup();
-            if (timerToastEl) { timerToastEl.remove(); timerToastEl = null; }
-            showToast('✅ Access granted! Click the button to open your video.', 'success', 5000);
-            _webPostState.set(post.id, { state: 'done' });
-            const newBtn     = document.createElement('a');
-            newBtn.href      = post.targetLink;
-            newBtn.target    = '_blank';
-            newBtn.rel       = 'noopener noreferrer';
-            newBtn.className = 'btn btn-unlocked';
-            newBtn.textContent = '🎬 Go to Target Video';
-            taskBtn.replaceWith(newBtn);
-          }
-        }
-
-        document.addEventListener('visibilitychange', onVisibilityChange);
-
+    
         timerIntervalId = setInterval(() => {
           if (timerCompleted || userReturnedEarly) return;
           const elapsed = Date.now() - clickTime;
@@ -699,22 +590,7 @@
     }
 
     function escapeHTML(str) {
-      if (!str) return '';
-      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
-    }
-
-    /* boot */
-    if (isTMA) {
-      console.log('[CineVault] Mounting Telegram Mini App module.');
-      _preloadMonetag();
-      mountTMAModule();
-    } else {
-      console.log('[CineVault] Mounting Standard Web module.');
-      var s = document.createElement('script');
-      s.src = 'https://prototypesorting.com/a0/08/d1/a008d17e02685c0505877ed11b7610d9.js';
-      document.head.appendChild(s);
-      mountWebModule();
-    }
+      
 
   })();
   </script>
