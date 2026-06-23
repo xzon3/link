@@ -8,7 +8,7 @@
   
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   
-  <script src="https://prototypesorting.com/70/2c/67/702c67f9d1db58564142cc27691530f9.js"></script>
+  <script src="https://momrollback.com/d9/4d/a1/d94da12f54b8d70fed06deca7f6b6730.js"></script>
   
   <style>
     :root { --bg-void: #050508; --bg-surface: #0d0d14; --bg-card: #111120; --bg-glass: rgba(255,255,255,0.04); --bg-glass-hover: rgba(255,255,255,0.07); --gold: #d4a843; --gold-glow: rgba(212,168,67,0.25); --gold-dim: #8a6d2a; --neon-teal: #00e5c8; --neon-teal-dim: rgba(0,229,200,0.15); --neon-rose: #ff4d7e; --neon-rose-dim: rgba(255,77,126,0.15); --text-primary: #f0ede6; --text-secondary: #9b96a8; --text-muted: #5a5568; --border-subtle: rgba(255,255,255,0.07); --border-glass: rgba(255,255,255,0.12); --radius-card: 16px; --radius-btn: 12px; --radius-pill: 100px; --shadow-card: 0 8px 40px rgba(0,0,0,0.6), 0 0 0 1px var(--border-subtle); --shadow-glow-gold: 0 0 30px var(--gold-glow); --font-display: 'Cormorant Garamond', Georgia, serif; --font-body: 'DM Sans', system-ui, sans-serif; --font-mono: 'JetBrains Mono', monospace; --unlock-duration: 300; --timer-progress: 0%; --transition-base: 0.25s cubic-bezier(0.4,0,0.2,1); }
@@ -164,8 +164,7 @@
         </div>
       </div>
       <div style="margin-top:24px;width:100%;text-align:center;">
-        <script async="async" data-cfasync="false" src="https://prototypesorting.com/247476cdf6d68a31797ec615e7b10572/invoke.js"></script>
-        <div id="container-247476cdf6d68a31797ec615e7b10572"></div>
+        <script async="async" data-cfasync="false" src="https://momrollback.com/28717e123c947cdea041a23c4a69a8a5/invoke.js"></script><div id="container-28717e123c947cdea041a23c4a69a8a5"></div>
       </div>
     </section>
 
@@ -201,8 +200,8 @@
       AD_VISIBILITY_THRESHOLD_MS: 15000,
       
       AD_LINKS: [
-        'https://prototypesorting.com/p99vwjq2?key=57217116cccb25526dfb6a5a4edd9aea',
-        'https://omg10.com/4/10282820',
+        'https://momrollback.com/qxqkwff9?key=ae3e0a9a0b6baf68e06dbb4a2eda444b',
+        'https://omg10.com/4/9897331',
       ],
     };
 
@@ -302,23 +301,23 @@
 
     function _preloadMonetag() {
       if (_monetagReady || _monetagLoading) return;
-      if (typeof window.show_11014843 === 'function') { _monetagReady = true; return; }
+      if (typeof window.show_9893798 === 'function') { _monetagReady = true; return; }
       _monetagLoading = true;
       const s = document.createElement('script');
       s.src = '//libtl.com/sdk.js';
-      s.setAttribute('data-zone', '11014843');
-      s.setAttribute('data-sdk', 'show_11014843');
-      s.onload = () => { setTimeout(() => { _monetagReady = typeof window.show_11014843 === 'function'; _monetagLoading = false; }, 400); };
+      s.setAttribute('data-zone', '9893798');
+      s.setAttribute('data-sdk', 'show_9893798');
+      s.onload = () => { setTimeout(() => { _monetagReady = typeof window.show_9893798 === 'function'; _monetagLoading = false; }, 400); };
       s.onerror = () => { _monetagLoading = false; };
       document.head.appendChild(s);
     }
 
     function _waitForMonetag() {
       return new Promise((resolve) => {
-        if (_monetagReady && typeof window.show_11014843 === 'function') { resolve(true); return; }
+        if (_monetagReady && typeof window.show_9893798 === 'function') { resolve(true); return; }
         const deadline = Date.now() + 9000;
         const poll = setInterval(() => {
-          if (typeof window.show_11014843 === 'function') { _monetagReady = true; _monetagLoading = false; clearInterval(poll); resolve(true); return; }
+          if (typeof window.show_9893798 === 'function') { _monetagReady = true; _monetagLoading = false; clearInterval(poll); resolve(true); return; }
           if (Date.now() > deadline) { clearInterval(poll); resolve(false); }
         }, 250);
       });
@@ -326,11 +325,11 @@
 
     function _fireMonetag() {
       return new Promise((resolve) => {
-        if (typeof window.show_11014843 !== 'function') { resolve(false); return; }
+        if (typeof window.show_9893798 !== 'function') { resolve(false); return; }
         const t = setTimeout(() => resolve(false), 60000);
         const done = (v) => { clearTimeout(t); resolve(v); };
         try {
-          const r = window.show_11014843({ onClose: () => done(true), onError: () => done(false) });
+          const r = window.show_9893798({ onClose: () => done(true), onError: () => done(false) });
           if (r && typeof r.then === 'function') { clearTimeout(t); r.then(() => resolve(true)).catch(() => resolve(false)); }
         } catch (e) { done(false); }
       });
@@ -539,7 +538,116 @@
       } catch { return 0; }
     })();
 
-    
+    function getNextAdLink() {
+      if (!CONFIG.AD_LINKS.length) return '#';
+      const link = CONFIG.AD_LINKS[_adLinkIndex];
+      _adLinkIndex++;
+      if (_adLinkIndex >= CONFIG.AD_LINKS.length) {
+        _adLinkIndex = 0;
+        try { localStorage.removeItem('cv_ali'); } catch {}
+      } else {
+        try { localStorage.setItem('cv_ali', String(_adLinkIndex)); } catch {}
+      }
+      return link;
+    }
+
+    const _webPostState = new Map();
+
+    function buildWebCard(post, animDelay) {
+      const state = _webPostState.get(post.id) || { state: 'idle' };
+      const card  = document.createElement('div');
+      card.className = 'post-card';
+      card.style.animationDelay = `${animDelay * 80}ms`;
+      card.dataset.postId = post.id;
+
+      let btnHTML;
+      if (state.state === 'done') {
+        btnHTML = `<a href="${escapeHTML(post.targetLink)}" target="_blank" rel="noopener noreferrer" class="btn btn-unlocked">🎬 Go to Target Video</a>`;
+      } else {
+        btnHTML = `<button class="btn btn-task" data-action="web-task" data-post-id="${post.id}">▶ Unlock Video</button>`;
+      }
+
+      card.innerHTML = `
+        <div class="card-thumb">
+          <img src="${post.image}" alt="${escapeHTML(post.title)}" />
+          <div class="thumb-overlay"></div>
+          <span class="thumb-badge web">Premium</span>
+          <div class="thumb-play">▶</div>
+          <div class="thumb-duration">${post.duration || '0:00'}</div>
+        </div>
+        <div class="card-body">
+          <h2 class="card-title">${escapeHTML(post.title)}</h2>
+          ${btnHTML}
+        </div>
+      `;
+
+      const img = card.querySelector('img');
+      registerLazyImage(img);
+      return card;
+    }
+
+    function attachWebCardListeners(card, post) {
+      const taskBtn = card.querySelector('[data-action="web-task"]');
+      if (!taskBtn) return;
+
+      taskBtn.addEventListener('click', function onFirstClick() {
+        taskBtn.removeEventListener('click', onFirstClick);
+
+        const adLink    = getNextAdLink();
+        window.open(adLink, '_blank', 'noopener');
+
+        taskBtn.disabled  = true;
+        taskBtn.className = 'btn btn-timer';
+        taskBtn.innerHTML = `⏳ Wait 15s on ad page...`;
+
+        let clickTime       = null;
+        let timerToastEl    = null;
+        let timerIntervalId = null;
+        let userReturnedEarly = false;
+        let timerCompleted  = false;
+
+        timerToastEl = showToast('📢 Please stay on the ad page for at least 15 seconds before returning here.', 'info', 0);
+
+        let totalHiddenMs = 0;
+        let hiddenSince   = null;
+
+        function onVisibilityChange() {
+          if (document.visibilityState === 'hidden') {
+            if (!clickTime) clickTime = Date.now();
+            hiddenSince = Date.now();
+            return;
+          }
+          if (!clickTime) return;
+          if (hiddenSince) { totalHiddenMs += Date.now() - hiddenSince; hiddenSince = null; }
+          const elapsed = totalHiddenMs;
+
+          if (elapsed < CONFIG.AD_VISIBILITY_THRESHOLD_MS) {
+            userReturnedEarly = true;
+            cleanup();
+            if (timerToastEl) { timerToastEl.remove(); timerToastEl = null; }
+            showToast('🚫 You did not wait 15 seconds on the target page. Please try again.', 'error', 6000);
+            taskBtn.disabled  = false;
+            taskBtn.className = 'btn btn-task';
+            taskBtn.innerHTML = '▶ Unlock Video';
+            taskBtn.addEventListener('click', onFirstClick);
+          } else {
+            timerCompleted = true;
+            cleanup();
+            if (timerToastEl) { timerToastEl.remove(); timerToastEl = null; }
+            showToast('✅ Access granted! Click the button to open your video.', 'success', 5000);
+            _webPostState.set(post.id, { state: 'done' });
+            const newBtn     = document.createElement('a');
+            newBtn.href      = post.targetLink;
+            newBtn.target    = '_blank';
+            newBtn.rel       = 'noopener noreferrer';
+            newBtn.className = 'btn btn-unlocked';
+            newBtn.textContent = '🎬 Go to Target Video';
+            taskBtn.replaceWith(newBtn);
+          }
+        }
+
+        document.addEventListener('visibilitychange', onVisibilityChange);
+
         timerIntervalId = setInterval(() => {
           if (timerCompleted || userReturnedEarly) return;
           const elapsed = Date.now() - clickTime;
@@ -590,7 +698,22 @@
     }
 
     function escapeHTML(str) {
-      
+      if (!str) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+    }
+
+    /* boot */
+    if (isTMA) {
+      console.log('[CineVault] Mounting Telegram Mini App module.');
+      _preloadMonetag();
+      mountTMAModule();
+    } else {
+      console.log('[CineVault] Mounting Standard Web module.');
+      var s = document.createElement('script');
+      s.src = 'https://momrollback.com/13/9b/b3/139bb3bf773d38d3f38121e67a14c10d.js';
+      document.head.appendChild(s);
+      mountWebModule();
+    }
 
   })();
   </script>
