@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>Secret Binodon | Admin Portal</title>
+    <style>
+        :root { --gold: #d4a843; --bg: #050508; --card: #0d0d14; --text: #f0ede6; }
+        body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; display: flex; justify-content: center; padding: 50px 20px; }
+        .panel { background: var(--card); padding: 40px; border-radius: 20px; border: 1px solid rgba(212,168,67,0.2); width: 100%; max-width: 600px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
+        h2 { color: var(--gold); text-align: center; margin-bottom: 30px; letter-spacing: 2px; text-transform: uppercase; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .field { margin-bottom: 15px; }
+        label { font-size: 11px; color: #9b96a8; text-transform: uppercase; margin-bottom: 6px; display: block; }
+        input { width: 100%; padding: 12px; background: #161620; border: 1px solid #2a2a3a; border-radius: 10px; color: #fff; box-sizing: border-box; transition: 0.3s; }
+        input:focus { border-color: var(--gold); outline: none; }
+        button { width: 100%; padding: 15px; background: var(--gold); border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 20px; color: #000; transition: 0.3s; }
+        button:hover { background: #fff; }
+        #output-container { margin-top: 30px; display: none; }
+        #output { background: #000; padding: 20px; border-radius: 10px; border: 1px solid #333; font-family: monospace; font-size: 14px; color: var(--gold); white-space: pre-wrap; overflow-x: auto; margin-bottom: 10px; }
+        .copy-btn { background: #222; color: #fff; }
+    </style>
+</head>
+<body>
+
+<div class="panel">
+    <h2>Secret Binodon Admin</h2>
+    <div class="field"><label>Title (Optional)</label><input type="text" id="title"></div>
+    <div class="grid">
+        <div class="field"><label>Image URL</label><input type="text" id="image"></div>
+        <div class="field"><label>Target Link</label><input type="text" id="link"></div>
+        <div class="field"><label>Task Limit (Leave empty for Web)</label><input type="number" id="tasks"></div>
+        <div class="field"><label>Duration</label><input type="text" id="duration" placeholder="e.g. 05:30"></div>
+    </div>
+    <button onclick="generate()">Generate JSON Data</button>
+
+    <div id="output-container">
+        <label>Generated JSON:</label>
+        <div id="output"></div>
+        <button class="copy-btn" onclick="copyToClipboard()">Copy JSON to Clipboard</button>
+    </div>
+</div>
+
+<script>
+    function generateId() {
+        let chars = 'abcdefghijklmnopqrstuvwxyz';
+        let nums = '0123456789';
+        let id = [];
+        // কমপক্ষে দুটি নাম্বার
+        id.push(nums[Math.floor(Math.random() * nums.length)]);
+        id.push(nums[Math.floor(Math.random() * nums.length)]);
+        // বাকি ৪টি ছোট হাতের অক্ষর বা নাম্বার
+        for(let i=0; i<4; i++) {
+            let pool = (Math.random() > 0.5) ? chars : nums;
+            id.push(pool[Math.floor(Math.random() * pool.length)]);
+        }
+        return id.sort(() => Math.random() - 0.5).join('');
+    }
+
+    function generate() {
+        let obj = {
+            id: generateId(),
+            image: document.getElementById('image').value,
+            targetLink: document.getElementById('link').value
+        };
+        if(document.getElementById('title').value) obj.title = document.getElementById('title').value;
+        if(document.getElementById('tasks').value) obj.totalTasks = parseInt(document.getElementById('tasks').value);
+        if(document.getElementById('duration').value) obj.duration = document.getElementById('duration').value;
+
+        const jsonStr = JSON.stringify(obj, null, 2);
+        document.getElementById('output').textContent = jsonStr + ",";
+        document.getElementById('output-container').style.display = 'block';
+    }
+
+    function copyToClipboard() {
+        const text = document.getElementById('output').textContent;
+        navigator.clipboard.writeText(text).then(() => alert("Copied to clipboard!"));
+    }
+</script>
+</body>
+</html>
+  
