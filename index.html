@@ -59,10 +59,16 @@
     .post-card:hover .card-thumb img { transform: scale(1.04); filter: brightness(1) saturate(1.2); }
     .thumb-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(5,5,8,0.85) 0%, transparent 50%); pointer-events: none; }
     .thumb-badge { position: absolute; top: 10px; right: 10px; font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: var(--radius-pill); backdrop-filter: blur(8px); }
+    .thumb-share { position: absolute; bottom: 13px; left: 56px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; background: rgba(212,168,67,0.9); border-radius: var(--radius-btn); backdrop-filter: blur(4px); color: var(--text-primary); font-size: 13px; line-height: 1; cursor: pointer; z-index: 3; transition: all var(--transition-base); }
+    .thumb-share:hover { background: var(--gold); color: #0a0800; transform: scale(1.08); }
+    @keyframes shared-pulse { 0%, 100% { box-shadow: var(--shadow-card); } 50% { box-shadow: 0 0 0 4px var(--gold), var(--shadow-card); } }
+    .post-card.shared-highlight { animation: shared-pulse 1s ease-in-out 2; }
     .thumb-badge.tma { background: rgba(0,229,200,0.2); color: var(--neon-teal); border: 1px solid rgba(0,229,200,0.3); }
     .thumb-badge.web { background: rgba(212,168,67,0.2); color: var(--gold); border: 1px solid rgba(212,168,67,0.3); }
     .thumb-play { position: absolute; bottom: 12px; left: 12px; width: 36px; height: 36px; background: rgba(212,168,67,0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; backdrop-filter: blur(4px); }
     .thumb-duration { position: absolute; bottom: 12px; right: 12px; background: rgba(0,0,0,0.7); color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; letter-spacing: 0.5px; backdrop-filter: blur(4px); z-index: 2; }
+    .thumb-upload-date { position: absolute; bottom: 12px; left: 98px; max-width: 108px; background: rgba(0,0,0,0.65); color: var(--text-secondary); padding: 3px 7px; border-radius: 4px; font-size: 10px; font-weight: 600; letter-spacing: 0.3px; backdrop-filter: blur(4px); z-index: 2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .thumb-upload-date:empty { display: none; }
     .card-body { padding: 16px; flex: 1; display: flex; flex-direction: column; gap: 12px; }
     .card-title { font-family: var(--font-display); font-size: 17px; font-weight: 600; line-height: 1.3; color: var(--text-primary); letter-spacing: 0.01em; }
     .task-progress { display: none; }
@@ -89,7 +95,7 @@
     .btn:disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
     .spinner { width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.2); border-top-color: currentColor; border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0; }
     @keyframes spin { to { transform: rotate(360deg); } }
-    #toast-container { position: fixed; top: 72px; left: 50%; transform: translateX(-50%); z-index: 10000; display: flex; flex-direction: column; gap: 10px; align-items: center; pointer-events: none; width: calc(100% - 32px); max-width: 420px; }
+    #toast-container { position: fixed; top: 75%; left: 50%; transform: translateX(-50%); z-index: 10000; display: flex; flex-direction: column; gap: 10px; align-items: center; pointer-events: none; width: calc(100% - 32px); max-width: 420px; }
     .toast { width: 100%; padding: 12px 18px; border-radius: 12px; font-size: 13px; font-weight: 500; line-height: 1.4; display: flex; align-items: flex-start; gap: 10px; backdrop-filter: blur(16px); animation: toast-in 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards; pointer-events: auto; }
     .toast.error { background: rgba(255,77,126,0.18); border: 1px solid rgba(255,77,126,0.4); color: #ff9ab5; }
     .toast.success { background: rgba(0,229,200,0.12); border: 1px solid rgba(0,229,200,0.3); color: var(--neon-teal); }
@@ -114,6 +120,12 @@
     .error-msg { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
     .btn-retry { display: inline-flex; align-items: center; gap: 8px; background: var(--bg-glass); border: 1px solid var(--border-glass); color: var(--text-primary); padding: 10px 24px; border-radius: var(--radius-btn); cursor: pointer; font-size: 13px; font-weight: 600; font-family: var(--font-body); transition: all var(--transition-base); }
     .btn-retry:hover { background: var(--bg-glass-hover); border-color: var(--gold); }
+    .scroll-sentinel { height: 1px; width: 100%; }
+    .loading-more { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 28px 0; color: var(--text-muted); font-size: 12px; letter-spacing: 0.04em; }
+    .loading-more.hidden { display: none; }
+    .end-of-list { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 28px 4px 8px; color: var(--text-muted); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
+    .end-of-list::before, .end-of-list::after { content: ''; height: 1px; width: 32px; background: var(--border-subtle); }
+    .end-of-list.hidden { display: none; }
     .app-footer { text-align: center; padding: 20px; font-size: 11px; color: var(--text-muted); letter-spacing: 0.05em; border-top: 1px solid var(--border-subtle); }
     .hidden { display: none !important; }
     @keyframes card-reveal { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -182,6 +194,11 @@
         <button class="btn-retry" id="btn-retry">↻ Retry</button>
       </div>
       <div id="posts-container" class="posts-grid hidden"></div>
+      <div id="loading-more" class="loading-more hidden">
+        <div class="spinner"></div><span>Loading more…</span>
+      </div>
+      <div id="end-of-list" class="end-of-list hidden">You've seen it all</div>
+      <div id="scroll-sentinel" class="scroll-sentinel" aria-hidden="true"></div>
     </section>
   </main>
 
@@ -194,10 +211,15 @@
     'use strict';
 
     const CONFIG = {
-      TMA_DATA_URL: 'tma-posts.json',
-      WEB_DATA_URL: 'web-posts.json',
+      TMA_DATA_DIR: 'tma-posts',
+      WEB_DATA_DIR: 'web-posts',
       UNLOCK_DURATION_SECONDS: 300,
       AD_VISIBILITY_THRESHOLD_MS: 15000,
+
+      // Your bot's username and Mini App short name (set via @BotFather).
+      // Shared post links use these to open the Mini App directly on that post.
+      TELEGRAM_BOT_USERNAME: 'GajshdnxvRobot',
+      TELEGRAM_APP_NAME: 'Xzon3',
 
       AD_LINKS: [
         'https://momrollback.com/qxqkwff9?key=ae3e0a9a0b6baf68e06dbb4a2eda444b',
@@ -241,6 +263,49 @@
       return toast;
     }
 
+    /* === Share (deep link to a specific post) ===
+       Opens the device's native share sheet — same behavior on both the
+       Telegram Mini App and the plain website. Falls back to copying the
+       link (with a toast) only if the share sheet isn't available. */
+
+    function buildPostShareURL(post) {
+      // A https://t.me/<bot>/<app>?startapp=... link launches the Telegram
+      // Mini App directly (Telegram routes it there instead of a browser).
+      // getDeepLinkPostId() below already knows how to read the "post_<id>"
+      // start_param and jump straight to that post once the app opens.
+      return `https://t.me/${CONFIG.TELEGRAM_BOT_USERNAME}/${CONFIG.TELEGRAM_APP_NAME}?startapp=post_${encodeURIComponent(post.id)}`;
+    }
+
+    async function sharePost(post) {
+      const shareUrl  = buildPostShareURL(post);
+      const shareText = post.title ? `Check this out: ${post.title}` : 'Check this out!';
+
+      if (navigator.share) {
+        try {
+          await navigator.share({ title: shareText, url: shareUrl });
+        } catch (err) {
+          // user cancelled the share sheet — nothing to do
+        }
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        showToast('🔗 Link copied to clipboard!', 'success', 2500);
+      } catch (err) {
+        showToast('Could not copy the link.', 'error');
+      }
+    }
+
+    function getDeepLinkPostId() {
+      if (isTMA && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.start_param) {
+        const sp = window.Telegram.WebApp.initDataUnsafe.start_param;
+        return sp.startsWith('post_') ? sp.slice(5) : sp;
+      }
+      const params = new URLSearchParams(location.search);
+      return params.get('post');
+    }
+
     const lazyObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -266,17 +331,129 @@
       lazyObserver.observe(img);
     }
 
-    const skeletonEl  = document.getElementById('skeleton-loader');
-    const errorEl     = document.getElementById('error-state');
-    const errorMsgEl  = document.getElementById('error-msg-text');
-    const postsGridEl = document.getElementById('posts-container');
-    const retryBtn    = document.getElementById('btn-retry');
+    const skeletonEl   = document.getElementById('skeleton-loader');
+    const errorEl      = document.getElementById('error-state');
+    const errorMsgEl   = document.getElementById('error-msg-text');
+    const postsGridEl  = document.getElementById('posts-container');
+    const retryBtn     = document.getElementById('btn-retry');
+    const loadingMoreEl = document.getElementById('loading-more');
+    const endOfListEl   = document.getElementById('end-of-list');
+    const sentinelEl    = document.getElementById('scroll-sentinel');
 
     function showSkeleton() { skeletonEl.style.display = ''; errorEl.classList.remove('visible'); postsGridEl.classList.add('hidden'); }
     function showError(msg = 'Failed to load posts. Check your connection and try again.') { skeletonEl.style.display = 'none'; errorMsgEl.textContent = msg; errorEl.classList.add('visible'); postsGridEl.classList.add('hidden'); }
     function showPosts() { skeletonEl.style.display = 'none'; errorEl.classList.remove('visible'); postsGridEl.classList.remove('hidden'); }
 
     retryBtn.addEventListener('click', () => { showSkeleton(); isTMA ? mountTMAModule() : mountWebModule(); });
+
+    /* === Infinite Scroll Controller (shared by TMA + Web modules) ===
+       Data lives in chunked page files: {dir}/manifest.json + {dir}/page-1.json, page-2.json, ...
+       Only the pages actually scrolled to are fetched — real network-level pagination,
+       not just staggered rendering of an already-downloaded array.
+       Posts are appended to the END of the highest-numbered page as they're created
+       (oldest → newest within the storage), so we walk pages newest → oldest
+       (totalPages down to 1) and reverse each page's array, putting the most
+       recently added post at the very top of the feed. */
+
+    let _scrollObserver = null;
+    let _pageState = { dir: '', pagesLoaded: 0, totalPages: 0, buildCard: null, attachListeners: null, cacheTarget: null };
+
+    function teardownInfiniteScroll() {
+      if (_scrollObserver) { _scrollObserver.disconnect(); _scrollObserver = null; }
+      loadingMoreEl.classList.add('hidden');
+      endOfListEl.classList.add('hidden');
+      sentinelEl.classList.remove('hidden');
+    }
+
+    async function fetchManifest(dir) {
+      const res = await fetch(`${dir}/manifest.json`, { cache: 'no-cache' });
+      if (!res.ok) throw new Error(`HTTP ${res.status} loading ${dir}/manifest.json`);
+      return res.json();
+    }
+
+    async function fetchPage(dir, pageNum) {
+      const res = await fetch(`${dir}/page-${pageNum}.json`, { cache: 'no-cache' });
+      if (!res.ok) throw new Error(`HTTP ${res.status} loading ${dir}/page-${pageNum}.json`);
+      const posts = await res.json();
+      if (!Array.isArray(posts)) throw new Error(`${dir}/page-${pageNum}.json is not an array`);
+      return posts;
+    }
+
+    async function loadNextPage() {
+      if (_pageState.pagesLoaded >= _pageState.totalPages) return;
+      const pageToLoad = _pageState.totalPages - _pageState.pagesLoaded;
+
+      loadingMoreEl.classList.remove('hidden');
+      try {
+        const posts = await fetchPage(_pageState.dir, pageToLoad);
+        const orderedPosts = posts.slice().reverse();
+        orderedPosts.forEach((post, i) => {
+          const card = _pageState.buildCard(post, i);
+          postsGridEl.appendChild(card);
+          if (_pageState.attachListeners) _pageState.attachListeners(card, post);
+          if (_pageState.cacheTarget) _pageState.cacheTarget.push(post);
+        });
+        _pageState.pagesLoaded++;
+      } catch (err) {
+        console.error('[Pagination] Failed to load page', pageToLoad, err);
+        showToast(`Couldn't load more posts. Check your connection and scroll again to retry.`, 'error');
+      } finally {
+        loadingMoreEl.classList.add('hidden');
+      }
+
+      if (_pageState.pagesLoaded >= _pageState.totalPages) {
+        if (_scrollObserver) _scrollObserver.disconnect();
+        sentinelEl.classList.add('hidden');
+        endOfListEl.classList.remove('hidden');
+      }
+    }
+
+    async function startPagedInfiniteScroll(dir, buildCard, attachListeners, cacheTarget, targetPostId) {
+      teardownInfiniteScroll();
+      const manifest = await fetchManifest(dir);
+      const totalPages = manifest.totalPages || 0;
+      if (totalPages === 0) throw new Error(`No posts found in ${dir}/manifest.json`);
+
+      _pageState = { dir, pagesLoaded: 0, totalPages, buildCard, attachListeners, cacheTarget };
+
+      const targetPage = (targetPostId && manifest.postPages) ? manifest.postPages[targetPostId] : null;
+
+      if (targetPage) {
+        // Newest-first means page `totalPages` loads before page 1. Load every
+        // page from the top down through the one holding the shared post,
+        // then scroll to it and briefly highlight it. Scroll continues normally after.
+        const pagesToLoad = totalPages - targetPage + 1;
+        while (_pageState.pagesLoaded < pagesToLoad) {
+          await loadNextPage();
+        }
+        const targetCard = postsGridEl.querySelector(`[data-post-id="${targetPostId}"]`);
+        if (targetCard) {
+          // postsGridEl is still `display:none` at this point (showPosts() runs later,
+          // in the caller, after this function resolves) — scrollIntoView is a silent
+          // no-op on a hidden container, so defer until after the grid is visible.
+          setTimeout(() => {
+            targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            targetCard.classList.add('shared-highlight');
+            setTimeout(() => targetCard.classList.remove('shared-highlight'), 2400);
+          }, 150);
+        }
+      } else {
+        await loadNextPage();
+        if (targetPostId) {
+          showToast('Shared post could not be found — it may have been removed.', 'error');
+        }
+      }
+
+      _scrollObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && _pageState.pagesLoaded < _pageState.totalPages) {
+            loadNextPage();
+          }
+        });
+      }, { rootMargin: '400px 0px', threshold: 0 });
+
+      _scrollObserver.observe(sentinelEl);
+    }
 
     /* === TMA Module === */
 
@@ -380,8 +557,10 @@
         <div class="card-thumb">
           <img src="${post.image}" alt="${escapeHTML(post.title)}" loading="lazy" />
           <div class="thumb-overlay"></div>
+          <button class="thumb-share" data-action="share" aria-label="Share this post"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14l5-5-5-5"/><path d="M4 20v-7a4 4 0 0 1 4-4h12"/></svg></button>
           <span class="thumb-badge tma">Task</span>
           <div class="thumb-play">▶</div>
+          <div class="thumb-upload-date">${formatUploadDateTime(post.uploadDate)}</div>
           <div class="thumb-duration">${post.duration || '0:00'}</div>
         </div>
         <div class="card-body">
@@ -507,21 +686,21 @@
           if (link) window.open(link, '_blank', 'noopener,noreferrer');
         });
       }
+
+      const shareBtn = card.querySelector('[data-action="share"]');
+      if (shareBtn) {
+        shareBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          sharePost(post);
+        });
+      }
     }
 
     async function mountTMAModule() {
       try {
-        const res = await fetch(CONFIG.TMA_DATA_URL, { cache: 'no-cache' });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const posts = await res.json();
-        if (!Array.isArray(posts) || posts.length === 0) throw new Error('No posts found in tma-posts.json');
-        _tmaPostsCache = posts;
         postsGridEl.innerHTML = '';
-        posts.forEach((post, idx) => {
-          const card = buildTMACard(post, idx);
-          postsGridEl.appendChild(card);
-          attachTMACardListeners(card, post);
-        });
+        _tmaPostsCache = [];
+        await startPagedInfiniteScroll(CONFIG.TMA_DATA_DIR, buildTMACard, attachTMACardListeners, _tmaPostsCache, getDeepLinkPostId());
         showPosts();
       } catch (err) {
         console.error('[TMA] Mount error:', err);
@@ -571,8 +750,10 @@
         <div class="card-thumb">
           <img src="${post.image}" alt="${escapeHTML(post.title)}" />
           <div class="thumb-overlay"></div>
+          <button class="thumb-share" data-action="share" aria-label="Share this post"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14l5-5-5-5"/><path d="M4 20v-7a4 4 0 0 1 4-4h12"/></svg></button>
           <span class="thumb-badge web">Premium</span>
           <div class="thumb-play">▶</div>
+          <div class="thumb-upload-date">${formatUploadDateTime(post.uploadDate)}</div>
           <div class="thumb-duration">${post.duration || '0:00'}</div>
         </div>
         <div class="card-body">
@@ -587,6 +768,14 @@
     }
 
     function attachWebCardListeners(card, post) {
+      const shareBtn = card.querySelector('[data-action="share"]');
+      if (shareBtn) {
+        shareBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          sharePost(post);
+        });
+      }
+
       const taskBtn = card.querySelector('[data-action="web-task"]');
       if (!taskBtn) return;
 
@@ -680,21 +869,22 @@
 
     async function mountWebModule() {
       try {
-        const res = await fetch(CONFIG.WEB_DATA_URL, { cache: 'no-cache' });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const posts = await res.json();
-        if (!Array.isArray(posts) || posts.length === 0) throw new Error('No posts found in web-posts.json');
         postsGridEl.innerHTML = '';
-        posts.forEach((post, idx) => {
-          const card = buildWebCard(post, idx);
-          postsGridEl.appendChild(card);
-          attachWebCardListeners(card, post);
-        });
+        await startPagedInfiniteScroll(CONFIG.WEB_DATA_DIR, buildWebCard, attachWebCardListeners, null, getDeepLinkPostId());
         showPosts();
       } catch (err) {
         console.error('[WEB] Mount error:', err);
         showError(`Could not load content. ${err.message}`);
       }
+    }
+
+    function formatUploadDateTime(value) {
+      if (!value) return '';
+      const d = new Date(value);
+      if (isNaN(d.getTime())) return '';
+      const datePart = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+      const timePart = d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+      return `${datePart}, ${timePart}`;
     }
 
     function escapeHTML(str) {

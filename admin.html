@@ -4,51 +4,191 @@
     <meta charset="UTF-8">
     <title>Xzon3 | Admin Portal</title>
     <style>
-        :root { --gold: #d4a843; --bg: #050508; --card: #0d0d14; --text: #f0ede6; }
+        :root { --gold: #d4a843; --bg: #050508; --card: #0d0d14; --text: #f0ede6; --teal: #00e5c8; --rose: #ff4d7e; }
         body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; display: flex; justify-content: center; padding: 50px 20px; }
         .panel { background: var(--card); padding: 40px; border-radius: 20px; border: 1px solid rgba(212,168,67,0.2); width: 100%; max-width: 600px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
-        h2 { color: var(--gold); text-align: center; margin-bottom: 30px; letter-spacing: 2px; text-transform: uppercase; }
+        h2 { color: var(--gold); text-align: center; margin-bottom: 8px; letter-spacing: 2px; text-transform: uppercase; }
+        h3 { color: var(--text); font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; margin: 0 0 14px; opacity: 0.7; }
+        .section-divider { border: none; border-top: 1px solid rgba(255,255,255,0.08); margin: 28px 0 22px; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .field { margin-bottom: 15px; }
         label { font-size: 11px; color: #9b96a8; text-transform: uppercase; margin-bottom: 6px; display: block; }
-        input { width: 100%; padding: 12px; background: #161620; border: 1px solid #2a2a3a; border-radius: 10px; color: #fff; box-sizing: border-box; transition: 0.3s; }
+        input { width: 100%; padding: 12px; background: #161620; border: 1px solid #2a2a3a; border-radius: 10px; color: #fff; box-sizing: border-box; transition: 0.3s; font-family: inherit; font-size: 14px; }
         input:focus { border-color: var(--gold); outline: none; }
-        button { width: 100%; padding: 15px; background: var(--gold); border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 20px; color: #000; transition: 0.3s; }
+        button { width: 100%; padding: 15px; background: var(--gold); border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 20px; color: #000; transition: 0.3s; font-size: 14px; }
         button:hover { background: #fff; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
         #output-container { margin-top: 30px; display: none; }
         #output { background: #000; padding: 20px; border-radius: 10px; border: 1px solid #333; font-family: monospace; font-size: 14px; color: var(--gold); white-space: pre-wrap; overflow-x: auto; margin-bottom: 10px; }
         .copy-btn { background: #222; color: #fff; }
+        #status-container { margin-top: 20px; display: none; }
+        #status-log { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 16px; font-size: 13px; line-height: 1.7; color: var(--text); font-family: monospace; }
+        #status-log .ok { color: var(--teal); }
+        #status-log .err { color: var(--rose); }
+        #status-log .info { color: var(--text); opacity: 0.75; }
+        .token-note { background: rgba(212,168,67,0.06); border: 1px solid rgba(212,168,67,0.2); color: #c9c4d6; border-radius: 10px; padding: 12px 16px; font-size: 11.5px; line-height: 1.6; margin-bottom: 16px; }
+        .token-note a { color: var(--gold); }
+        .checkbox-field { display: flex; align-items: flex-start; }
+        .checkbox-label { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; text-transform: none; color: var(--text); cursor: pointer; line-height: 1.5; }
+        .checkbox-label input[type="checkbox"] { width: auto; margin-top: 2px; flex-shrink: 0; accent-color: var(--gold); }
+
+        .image-input-row { display: flex; gap: 8px; }
+        .image-input-row input[type="text"] { flex: 1; }
+        .upload-icon-btn { width: auto; flex-shrink: 0; margin: 0; padding: 0 16px; background: #222; color: var(--gold); border-radius: 10px; font-size: 16px; }
+        .upload-icon-btn:hover { background: #2a2a3a; }
+        .upload-icon-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .upload-status { font-size: 11px; margin-top: 6px; min-height: 14px; line-height: 1.5; }
+        .upload-status.info { color: var(--text-secondary, #9b96a8); }
+        .upload-status.ok { color: var(--teal); }
+        .upload-status.err { color: var(--rose); }
+        #image-preview { margin-top: 8px; max-width: 110px; max-height: 82px; border-radius: 8px; border: 1px solid #2a2a3a; object-fit: cover; display: none; }
+
+        .preview-card { width: 150px; margin: 4px auto 0; }
+        .preview-thumb { position: relative; width: 100%; aspect-ratio: 3/4; border-radius: 12px; overflow: hidden; background: #1a1622; border: 1px solid #2a2a3a; }
+        .preview-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .preview-gradient { position: absolute; left: 0; right: 0; bottom: 0; height: 60%; background: linear-gradient(to top, rgba(0,0,0,0.88), transparent); pointer-events: none; }
+        .preview-duration-badge { position: absolute; right: 6px; bottom: 6px; background: rgba(0,0,0,0.75); color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 5px; z-index: 2; }
+        .preview-lock-badge { position: absolute; top: 6px; left: 6px; background: rgba(212,168,67,0.92); color: #000; font-size: 9.5px; font-weight: bold; padding: 3px 7px; border-radius: 20px; z-index: 2; align-items: center; gap: 3px; }
+        .preview-card-title { position: absolute; left: 8px; right: 8px; bottom: 7px; color: #fff; font-size: 11.5px; font-weight: 600; z-index: 2; line-height: 1.3; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
+
+        .list-btn { background: #222; color: #fff; }
+        #post-list-container { margin-top: 16px; }
+        .post-list-group { margin-bottom: 22px; }
+        .post-list-group-title { font-size: 11px; color: #9b96a8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .post-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .grid-card { background: #12121a; border: 1px solid #24242f; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; }
+        .grid-thumb { width: 100%; aspect-ratio: 3/4; background: #1a1622; overflow: hidden; }
+        .grid-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .grid-body { padding: 6px 6px 8px; }
+        .grid-title { font-size: 10px; color: #d8d4e0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
+        .grid-meta { font-size: 8.5px; color: #6f6a80; margin-bottom: 6px; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .grid-actions { display: flex; gap: 4px; }
+        .grid-btn { flex: 1; width: auto; padding: 5px 0; margin: 0; font-size: 9.5px; font-weight: bold; border-radius: 6px; text-align: center; border: none; cursor: pointer; }
+        .grid-btn.edit { background: #2a2a3a; color: var(--gold); }
+        .grid-btn.danger { background: rgba(255,77,126,0.14); color: var(--rose); }
+        .load-more-btn { margin-top: 12px; background: #1a1a24; color: var(--gold); border: 1px solid rgba(212,168,67,0.25); font-size: 12px; padding: 12px; }
+        .edit-banner { display: none; align-items: center; justify-content: space-between; gap: 10px; background: rgba(212,168,67,0.1); border: 1px solid rgba(212,168,67,0.35); border-radius: 10px; padding: 10px 14px; margin-bottom: 16px; font-size: 12.5px; color: var(--gold); }
+        .edit-banner button { width: auto; margin: 0; padding: 6px 12px; font-size: 11px; background: transparent; border: 1px solid rgba(212,168,67,0.5); color: var(--gold); }
+        .empty-hint { font-size: 12px; color: #7a7588; padding: 8px 0; }
     </style>
 </head>
 <body>
 
 <div class="panel">
     <h2>Xzon3 Admin</h2>
-    <div class="field"><label>Title (Optional)</label><input type="text" id="title"></div>
-    <div class="grid">
-        <div class="field"><label>Image URL</label><input type="text" id="image"></div>
-        <div class="field"><label>Target Link</label><input type="text" id="link"></div>
-        <div class="field"><label>Task Limit (Leave empty for Web)</label><input type="number" id="tasks"></div>
-        <div class="field"><label>Duration</label><input type="text" id="duration" placeholder="e.g. 05:30"></div>
+
+    <h3>GitHub সংযোগ</h3>
+    <div class="token-note">
+        টোকেন কোথাও সেভ হয় না — শুধু এই ট্যাব খোলা থাকা পর্যন্ত মেমোরিতে থাকে, পেজ রিলোড দিলে আবার দিতে হবে।
+        <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">Fine-grained token বানান</a> —
+        শুধু এই রিপোজিটরির জন্য, <b>Contents: Read and write</b> পারমিশন দিয়ে।
     </div>
-    <button onclick="generate()">Generate JSON Data</button>
+    <div class="grid">
+        <div class="field"><label>Repo Owner</label><input type="text" id="gh-owner" value="xzon3"></div>
+        <div class="field"><label>Repo Name</label><input type="text" id="gh-repo" value="test"></div>
+        <div class="field"><label>Branch</label><input type="text" id="gh-branch" value="main"></div>
+        <div class="field"><label>Personal Access Token</label><input type="password" id="gh-token" placeholder="ghp_... / github_pat_..."></div>
+    </div>
+
+    <hr class="section-divider">
+
+    <div id="edit-banner" class="edit-banner">
+        <span id="edit-banner-text"></span>
+        <button onclick="cancelEdit()">✕ বাতিল করো</button>
+    </div>
+
+    <h3>নতুন পোস্ট</h3>
+    <div class="field"><label>Title (Optional)</label><input type="text" id="title" oninput="updateCardPreview()"></div>
+    <div class="grid">
+        <div class="field">
+            <label>Image URL</label>
+            <div class="image-input-row">
+                <input type="text" id="image" oninput="updateImagePreview(); updateCardPreview();">
+                <button type="button" class="upload-icon-btn" id="image-upload-btn" onclick="document.getElementById('image-file').click()" title="ছবি আপলোড করো">📤</button>
+            </div>
+            <input type="file" id="image-file" accept="image/*" style="display:none;" onchange="handleImageFileSelect(event)">
+            <div id="image-upload-status" class="upload-status"></div>
+            <div id="image-preview-status" class="upload-status" style="display:none;"></div>
+            <img id="image-preview" alt="preview">
+        </div>
+        <div class="field"><label>Target Link</label><input type="text" id="link"></div>
+        <div class="field"><label>Task Limit (TMA-এর জন্য; নিচের বক্স টিক দিলেও লাগবে)</label><input type="number" id="tasks" oninput="updateCardPreview()"></div>
+        <div class="field"><label>Duration</label><input type="text" id="duration" placeholder="e.g. 05:30" oninput="updateCardPreview()"></div>
+        <div class="field"><label>Upload Date</label><input type="datetime-local" id="uploadDate"></div>
+    </div>
+    <div class="field checkbox-field">
+        <label class="checkbox-label"><input type="checkbox" id="both-mode"> TMA + Web — একই কন্টেন্ট এবং একই আইডি দিয়ে দুটোতেই পোস্ট করো (একটা tma-posts-এ, একটা web-posts-এ)</label>
+    </div>
+
+    <div class="field">
+        <label>প্রিভিউ (সাইটে যেমন দেখাবে)</label>
+        <div class="preview-card">
+            <div class="preview-thumb">
+                <img id="preview-card-img" alt="">
+                <div id="preview-lock-badge" class="preview-lock-badge" style="display:none;"></div>
+                <div id="preview-duration-badge" class="preview-duration-badge" style="display:none;"></div>
+                <div class="preview-gradient"></div>
+                <div id="preview-card-title" class="preview-card-title">(No title)</div>
+            </div>
+        </div>
+    </div>
+
+    <button id="push-btn" onclick="pushToGithub()">🚀 Generate &amp; Push to GitHub</button>
+    <button class="copy-btn" id="generate-only-btn" onclick="generateOnly()" style="margin-top:10px;">শুধু JSON তৈরি করো (কপি করার জন্য)</button>
 
     <div id="output-container">
         <label>Generated JSON:</label>
         <div id="output"></div>
         <button class="copy-btn" onclick="copyToClipboard()">Copy JSON to Clipboard</button>
     </div>
+
+    <div id="status-container">
+        <label>স্ট্যাটাস:</label>
+        <div id="status-log"></div>
+    </div>
+
+    <hr class="section-divider">
+
+    <h3>পুরনো পোস্ট ম্যানেজ করো</h3>
+    <div class="grid">
+        <button class="list-btn" id="btn-tma-posts" style="margin-top:0;" onclick="loadPostList('tma-posts')">TMA পোস্ট লোড করো</button>
+        <button class="list-btn" id="btn-web-posts" style="margin-top:0;" onclick="loadPostList('web-posts')">Web পোস্ট লোড করো</button>
+    </div>
+    <div id="post-list-container"></div>
+
+    <hr class="section-divider">
+
+    <h3>ছবি ম্যানেজ করো (images/ ফোল্ডার)</h3>
+    <button class="list-btn" id="btn-images" style="margin-top:0;" onclick="loadImageList()">ছবি লোড করো</button>
+    <div id="image-list-container" style="margin-top:16px;"></div>
 </div>
 
 <script>
+    (function prefillUploadDate() {
+        const d = new Date(Date.now() - new Date().getTimezoneOffset() * 60000);
+        document.getElementById('uploadDate').value = d.toISOString().slice(0, 16);
+    })();
+    updateCardPreview();
+
+    /* === Edit/Delete state === */
+    let _editState = null;              // { dir, id, page } while editing an existing post
+    let _loadedPosts = {};               // { 'tma-posts': [...], 'web-posts': [...] } — accumulates as pages load, each post tagged with _page
+    let _listState = {};                 // { 'tma-posts': { totalPages, pagesLoaded, loading }, ... } — pagination cursor per directory
+
+    function escapeHTML(str) {
+        return String(str == null ? '' : str)
+            .replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+    }
+
     function generateId() {
         let chars = 'abcdefghijklmnopqrstuvwxyz';
         let nums = '0123456789';
         let id = [];
-        // কমপক্ষে দুটি নাম্বার
         id.push(nums[Math.floor(Math.random() * nums.length)]);
         id.push(nums[Math.floor(Math.random() * nums.length)]);
-        // বাকি ৪টি ছোট হাতের অক্ষর বা নাম্বার
         for(let i=0; i<4; i++) {
             let pool = (Math.random() > 0.5) ? chars : nums;
             id.push(pool[Math.floor(Math.random() * pool.length)]);
@@ -56,19 +196,824 @@
         return id.sort(() => Math.random() - 0.5).join('');
     }
 
-    function generate() {
-        let obj = {
-            id: generateId(),
-            image: document.getElementById('image').value,
-            targetLink: document.getElementById('link').value
-        };
-        if(document.getElementById('title').value) obj.title = document.getElementById('title').value;
-        if(document.getElementById('tasks').value) obj.totalTasks = parseInt(document.getElementById('tasks').value);
-        if(document.getElementById('duration').value) obj.duration = document.getElementById('duration').value;
+    /* === Direct image upload (commits the file straight into the repo's /images/ folder) === */
+    function randomFileToken() {
+        const pool = 'abcdefghijklmnopqrstuvwxyz0123456789';
+        let s = '';
+        for (let i = 0; i < 8; i++) s += pool[Math.floor(Math.random() * pool.length)];
+        return s;
+    }
 
-        const jsonStr = JSON.stringify(obj, null, 2);
-        document.getElementById('output').textContent = jsonStr + ",";
+    function readFileAsBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(String(reader.result).split(',')[1] || '');
+            reader.onerror = () => reject(new Error('ফাইল পড়া যায়নি।'));
+            reader.readAsDataURL(file);
+        });
+    }
+
+    /* === Image preview with auto-retry ===
+       Right after upload, GitHub Pages usually takes 1-2 minutes to actually
+       serve the new file — a plain <img src="..."> would just show a broken
+       icon during that window. Instead we test-load it in the background,
+       show a "লোড হচ্ছে..." status while it's not ready yet, and retry every
+       10s for up to 2 minutes; the real <img> only gets the src once it's
+       confirmed to load. */
+    let _previewRetryTimer = null;
+    let _previewRetryUrl = null;
+
+    function clearPreviewRetry() {
+        if (_previewRetryTimer) { clearTimeout(_previewRetryTimer); _previewRetryTimer = null; }
+        _previewRetryUrl = null;
+    }
+
+    function updateImagePreview() {
+        const url = document.getElementById('image').value.trim();
+        const previewEl = document.getElementById('image-preview');
+        const statusEl = document.getElementById('image-preview-status');
+
+        clearPreviewRetry();
+
+        if (!url) {
+            previewEl.style.display = 'none';
+            previewEl.removeAttribute('src');
+            statusEl.style.display = 'none';
+            return;
+        }
+
+        attemptPreviewLoad(url, 0);
+    }
+
+    function attemptPreviewLoad(url, attempt) {
+        const MAX_ATTEMPTS = 12;  // 12 retries × 10s ≈ 2 minutes
+        const RETRY_MS = 10000;
+
+        _previewRetryUrl = url;
+        const previewEl = document.getElementById('image-preview');
+        const statusEl = document.getElementById('image-preview-status');
+
+        previewEl.style.display = 'none';
+        statusEl.style.display = 'block';
+        statusEl.className = 'upload-status info';
+        statusEl.textContent = attempt === 0
+            ? '⏳ প্রিভিউ লোড হচ্ছে...'
+            : `⏳ প্রিভিউ লোড হচ্ছে... (চেষ্টা ${attempt + 1}/${MAX_ATTEMPTS + 1})`;
+
+        const tester = new Image();
+        tester.onload = () => {
+            if (_previewRetryUrl !== url) return; // field changed since — ignore stale result
+            previewEl.src = url;
+            previewEl.style.display = 'block';
+            statusEl.style.display = 'none';
+            clearPreviewRetry();
+        };
+        tester.onerror = () => {
+            if (_previewRetryUrl !== url) return;
+            if (attempt >= MAX_ATTEMPTS) {
+                statusEl.className = 'upload-status err';
+                statusEl.textContent = '⚠️ প্রিভিউ লোড করা যায়নি (২ মিনিট চেষ্টা করা হয়েছে)। লিংকটা ঠিক আছে কিনা দেখো, বা কিছুক্ষণ পর ফিল্ডে আবার একই লিংক বসিয়ে দেখো।';
+                clearPreviewRetry();
+                return;
+            }
+            _previewRetryTimer = setTimeout(() => attemptPreviewLoad(url, attempt + 1), RETRY_MS);
+        };
+        tester.src = url;
+    }
+
+    /* === Live card preview — mirrors how the post will actually look on the site,
+       so the admin can sanity-check title/thumbnail/duration/lock-badge before
+       pushing. Updates on every keystroke; also called after edit-populate,
+       cancel, and successful image upload. */
+    function updateCardPreview() {
+        const image = document.getElementById('image').value.trim();
+        const title = document.getElementById('title').value.trim();
+        const duration = document.getElementById('duration').value.trim();
+        const tasksVal = document.getElementById('tasks').value;
+
+        const imgEl = document.getElementById('preview-card-img');
+        const durEl = document.getElementById('preview-duration-badge');
+        const lockEl = document.getElementById('preview-lock-badge');
+        const titleEl = document.getElementById('preview-card-title');
+
+        if (image) {
+            imgEl.src = image;
+            imgEl.style.opacity = '1';
+        } else {
+            imgEl.removeAttribute('src');
+            imgEl.style.opacity = '0';
+        }
+
+        if (duration) {
+            durEl.textContent = duration;
+            durEl.style.display = 'block';
+        } else {
+            durEl.style.display = 'none';
+        }
+
+        if (tasksVal) {
+            lockEl.textContent = `🔒 ${tasksVal} Tasks`;
+            lockEl.style.display = 'flex';
+        } else {
+            lockEl.style.display = 'none';
+        }
+
+        titleEl.textContent = title || '(No title)';
+    }
+
+    async function handleImageFileSelect(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        const fileInput = e.target;
+        const statusEl = document.getElementById('image-upload-status');
+        const uploadBtn = document.getElementById('image-upload-btn');
+
+        const { owner, repo, branch, token } = getGithubCreds();
+        if (!owner || !repo || !token) {
+            alert('আগে Owner, Repo, আর Token দাও।');
+            fileInput.value = '';
+            return;
+        }
+        if (!file.type.startsWith('image/')) {
+            statusEl.textContent = '⚠️ শুধু ছবি ফাইল (jpg/png/webp) আপলোড করা যাবে।';
+            statusEl.className = 'upload-status err';
+            fileInput.value = '';
+            return;
+        }
+        const MAX_BYTES = 5 * 1024 * 1024;
+        if (file.size > MAX_BYTES) {
+            statusEl.textContent = `⚠️ ছবিটা অনেক বড় (${(file.size / 1024 / 1024).toFixed(1)}MB) — ৫MB-এর কম সাইজের ছবি দাও, দরকার হলে কমপ্রেস/রিসাইজ করে নাও।`;
+            statusEl.className = 'upload-status err';
+            fileInput.value = '';
+            return;
+        }
+
+        uploadBtn.disabled = true;
+        statusEl.textContent = '⏳ আপলোড হচ্ছে...';
+        statusEl.className = 'upload-status info';
+
+        try {
+            const ext = (file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg';
+            const filename = `${Date.now().toString(36)}-${randomFileToken()}.${ext}`;
+            const path = `images/${filename}`;
+            const base64Content = await readFileAsBase64(file);
+
+            await ghPutFileRaw(owner, repo, path, branch, token, base64Content, `Upload image ${filename}`);
+
+            const imageURL = `https://${owner.toLowerCase()}.github.io/${repo}/${path}`;
+            document.getElementById('image').value = imageURL;
+            updateImagePreview();
+            updateCardPreview();
+            statusEl.textContent = '✅ আপলোড সফল, Image URL ফিল্ড পূরণ হয়ে গেছে। (GitHub Pages-এ দেখা যেতে ১-২ মিনিট লাগতে পারে।)';
+            statusEl.className = 'upload-status ok';
+        } catch (err) {
+            console.error(err);
+            statusEl.textContent = `❌ আপলোড ব্যর্থ: ${err.message}`;
+            statusEl.className = 'upload-status err';
+        } finally {
+            uploadBtn.disabled = false;
+            fileInput.value = '';
+        }
+    }
+
+    /* === Manage images/ folder: list files, delete one === */
+    let _loadedImages = null;   // null = not loaded, [] = loaded but empty, [...] = loaded
+    let _imagesLoading = false;
+
+    async function ghListDir(owner, repo, path, branch, token) {
+        const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${encodeURIComponent(branch)}`, {
+            headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' }
+        });
+        if (res.status === 404) return [];
+        if (!res.ok) throw new Error(`GET ${path} → HTTP ${res.status}: ${(await res.json()).message || res.statusText}`);
+        const data = await res.json();
+        return Array.isArray(data) ? data : [];
+    }
+
+    async function ghDeleteFile(owner, repo, path, branch, token, sha, message) {
+        const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/vnd.github+json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ message, sha, branch })
+        });
+        if (!res.ok) throw new Error(`DELETE ${path} → HTTP ${res.status}: ${(await res.json()).message || res.statusText}`);
+        return res.json();
+    }
+
+    function updateImagesButtonLabel() {
+        const btn = document.getElementById('btn-images');
+        if (!btn) return;
+        btn.textContent = _loadedImages !== null ? '✕ ছবি সরাও' : 'ছবি লোড করো';
+    }
+
+    function renderImageList() {
+        const container = document.getElementById('image-list-container');
+        if (_imagesLoading) { container.innerHTML = `<div class="empty-hint">⏳ লোড হচ্ছে...</div>`; return; }
+        if (_loadedImages === null) { container.innerHTML = ''; return; }
+        if (_loadedImages.length === 0) { container.innerHTML = `<div class="empty-hint">images/ ফোল্ডারে কোনো ছবি নেই।</div>`; return; }
+
+        const cards = _loadedImages.map(f => `
+            <div class="grid-card">
+                <div class="grid-thumb"><img src="${escapeHTML(f.download_url)}" onerror="this.style.opacity=0.15" /></div>
+                <div class="grid-body">
+                    <div class="grid-title">${escapeHTML(f.name)}</div>
+                    <div class="grid-meta">${(f.size / 1024).toFixed(0)} KB</div>
+                    <div class="grid-actions">
+                        <button class="grid-btn danger" data-action="delete-image" data-path="${escapeHTML(f.path)}" data-sha="${escapeHTML(f.sha)}" data-name="${escapeHTML(f.name)}">Del</button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+        container.innerHTML = `<div class="post-grid">${cards}</div>`;
+    }
+
+    async function loadImageList() {
+        if (_loadedImages !== null) {
+            _loadedImages = null;
+            renderImageList();
+            updateImagesButtonLabel();
+            return;
+        }
+        const { owner, repo, branch, token } = getGithubCreds();
+        if (!owner || !repo || !token) {
+            alert('আগে Owner, Repo, আর Token দাও।');
+            return;
+        }
+        _imagesLoading = true;
+        renderImageList();
+        try {
+            const files = await ghListDir(owner, repo, 'images', branch, token);
+            _loadedImages = files.filter(f => f.type === 'file').sort((a, b) => b.name.localeCompare(a.name));
+        } catch (err) {
+            console.error(err);
+            _loadedImages = [];
+            alert(`ছবি লোড ব্যর্থ হয়েছে: ${err.message}`);
+        } finally {
+            _imagesLoading = false;
+            updateImagesButtonLabel();
+            renderImageList();
+        }
+    }
+
+    async function deleteImage(path, sha, name) {
+        const { owner, repo, branch, token } = getGithubCreds();
+        if (!owner || !repo || !token) {
+            alert('আগে Owner, Repo, আর Token দাও।');
+            return;
+        }
+        const ok = confirm(`"${name}" ডিলিট করবে? মনে রেখো — কোনো পোস্ট এই ছবিটা ব্যবহার করলে সেই পোস্টের থাম্বনেইল ভেঙে যাবে। এটা ফেরানো যাবে না।`);
+        if (!ok) return;
+
+        try {
+            await ghDeleteFile(owner, repo, path, branch, token, sha, `Delete image ${name}`);
+            _loadedImages = _loadedImages.filter(f => f.path !== path);
+            renderImageList();
+        } catch (err) {
+            console.error(err);
+            alert(`ডিলিট ব্যর্থ হয়েছে: ${err.message}`);
+        }
+    }
+
+    document.getElementById('image-list-container').addEventListener('click', (e) => {
+        const delBtn = e.target.closest('[data-action="delete-image"]');
+        if (delBtn) deleteImage(delBtn.dataset.path, delBtn.dataset.sha, delBtn.dataset.name);
+    });
+
+    /* Builds shared fields once, then returns either one entry (normal mode)
+       or two entries — tma-posts + web-posts, using the SAME id for both
+       (both mode: same content, same id, two directories). */
+    function buildPostObjects() {
+        const bothMode = document.getElementById('both-mode').checked;
+        const tasksVal = document.getElementById('tasks').value;
+        const image = document.getElementById('image').value;
+        const targetLink = document.getElementById('link').value;
+        const title = document.getElementById('title').value;
+        const duration = document.getElementById('duration').value;
+        const uploadDateVal = document.getElementById('uploadDate').value;
+        const uploadDateISO = uploadDateVal ? new Date(uploadDateVal).toISOString() : null;
+        const sharedId = generateId();
+
+        function makeObj(withTasks) {
+            let obj = { id: sharedId, image, targetLink };
+            if (title) obj.title = title;
+            if (withTasks && tasksVal) obj.totalTasks = parseInt(tasksVal);
+            if (duration) obj.duration = duration;
+            if (uploadDateISO) obj.uploadDate = uploadDateISO;
+            return obj;
+        }
+
+        if (bothMode) {
+            return [
+                { obj: makeObj(true), dir: 'tma-posts' },
+                { obj: makeObj(false), dir: 'web-posts' }
+            ];
+        }
+        const dir = tasksVal ? 'tma-posts' : 'web-posts';
+        return [{ obj: makeObj(!!tasksVal), dir }];
+    }
+
+    function showOutput(entries) {
+        const parts = entries.map(e => `// ${e.dir}\n` + JSON.stringify(e.obj, null, 2) + ",");
+        document.getElementById('output').textContent = parts.join('\n\n');
         document.getElementById('output-container').style.display = 'block';
+    }
+
+    function generateOnly() {
+        showOutput(buildPostObjects());
+    }
+
+    /* === Status log === */
+    function resetStatus() {
+        const log = document.getElementById('status-log');
+        log.innerHTML = '';
+        document.getElementById('status-container').style.display = 'block';
+    }
+    function logStatus(msg, cls) {
+        const log = document.getElementById('status-log');
+        const line = document.createElement('div');
+        line.className = cls || 'info';
+        line.textContent = msg;
+        log.appendChild(line);
+    }
+
+    /* === UTF-8 safe base64 helpers (GitHub Contents API needs base64) === */
+    function b64EncodeUnicode(str) {
+        return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
+            (match, p1) => String.fromCharCode('0x' + p1)));
+    }
+    function b64DecodeUnicode(str) {
+        return decodeURIComponent(atob(str.replace(/\n/g, '')).split('').map(c =>
+            '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+        ).join(''));
+    }
+
+    /* === GitHub Contents API === */
+    async function ghGetFile(owner, repo, path, branch, token) {
+        const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${encodeURIComponent(branch)}`, {
+            headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' }
+        });
+        if (res.status === 404) return null;
+        if (!res.ok) throw new Error(`GET ${path} → HTTP ${res.status}: ${(await res.json()).message || res.statusText}`);
+        const data = await res.json();
+        return { sha: data.sha, content: b64DecodeUnicode(data.content) };
+    }
+
+    async function ghPutFile(owner, repo, path, branch, token, content, message, sha) {
+        const body = { message, content: b64EncodeUnicode(content), branch };
+        if (sha) body.sha = sha;
+        const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/vnd.github+json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
+        if (!res.ok) throw new Error(`PUT ${path} → HTTP ${res.status}: ${(await res.json()).message || res.statusText}`);
+        return res.json();
+    }
+
+    /* Same PUT as above but for content that's already base64-encoded binary data
+       (images) — skips the UTF-8 text encoding step so bytes aren't corrupted. */
+    async function ghPutFileRaw(owner, repo, path, branch, token, base64Content, message) {
+        const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/vnd.github+json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ message, content: base64Content, branch })
+        });
+        if (!res.ok) throw new Error(`PUT ${path} → HTTP ${res.status}: ${(await res.json()).message || res.statusText}`);
+        return res.json();
+    }
+
+    /* Pushes a single post object into a single directory's manifest.json + page-N.json.
+       Used once (normal mode) or twice back-to-back (both mode). */
+    async function pushOneDirectory(owner, repo, branch, token, dir, obj) {
+        const tag = `[${dir}]`;
+        const manifestPath = `${dir}/manifest.json`;
+        logStatus(`⏳ ${tag} ${manifestPath} পড়া হচ্ছে...`, 'info');
+        const manifestFile = await ghGetFile(owner, repo, manifestPath, branch, token);
+        let manifest = manifestFile ? JSON.parse(manifestFile.content) : { totalPages: 0, pageSize: 20, totalPosts: 0, postPages: {} };
+        const pageSize = manifest.pageSize || 20;
+        let totalPages = manifest.totalPages || 0;
+        const postPages = manifest.postPages || {};
+
+        let targetPage, pageFile, posts, isNewPage;
+
+        if (totalPages === 0) {
+            targetPage = 1;
+            pageFile = null;
+            posts = [];
+            isNewPage = true;
+        } else {
+            targetPage = totalPages;
+            const lastPagePath = `${dir}/page-${targetPage}.json`;
+            logStatus(`⏳ ${tag} ${lastPagePath} পড়া হচ্ছে...`, 'info');
+            pageFile = await ghGetFile(owner, repo, lastPagePath, branch, token);
+            posts = pageFile ? JSON.parse(pageFile.content) : [];
+            if (!Array.isArray(posts)) posts = [];
+
+            if (posts.length >= pageSize) {
+                targetPage = totalPages + 1;
+                pageFile = null;
+                posts = [];
+                isNewPage = true;
+            } else {
+                isNewPage = false;
+            }
+        }
+
+        posts.push(obj);
+        const pagePath = `${dir}/page-${targetPage}.json`;
+        const pageContent = JSON.stringify(posts, null, 2) + '\n';
+
+        logStatus(`⏳ ${tag} ${pagePath}-এ পোস্ট "${obj.id}" যোগ করা হচ্ছে (${posts.length}/${pageSize})...`, 'info');
+        await ghPutFile(owner, repo, pagePath, branch, token, pageContent, `Add post ${obj.id} to ${pagePath}`, pageFile ? pageFile.sha : undefined);
+        logStatus(`✅ ${tag} ${pagePath} আপডেট হয়েছে।`, 'ok');
+
+        const newTotalPages = isNewPage ? targetPage : totalPages;
+        const newTotalPosts = (manifest.totalPosts || 0) + 1;
+        const newManifest = {
+            totalPages: newTotalPages,
+            pageSize,
+            totalPosts: newTotalPosts,
+            postPages: { ...postPages, [obj.id]: targetPage }
+        };
+        const manifestContent = JSON.stringify(newManifest, null, 2) + '\n';
+
+        logStatus(`⏳ ${tag} ${manifestPath} আপডেট করা হচ্ছে...`, 'info');
+        await ghPutFile(owner, repo, manifestPath, branch, token, manifestContent, `Update manifest for post ${obj.id}`, manifestFile ? manifestFile.sha : undefined);
+        logStatus(`✅ ${tag} ${manifestPath} আপডেট হয়েছে।`, 'ok');
+        logStatus(`🎉 ${tag} পোস্ট "${obj.id}" পাবলিশ হয়েছে।`, 'ok');
+    }
+
+    /* === Load / render post list for management === */
+    function getGithubCreds() {
+        return {
+            owner: document.getElementById('gh-owner').value.trim(),
+            repo: document.getElementById('gh-repo').value.trim(),
+            branch: document.getElementById('gh-branch').value.trim() || 'main',
+            token: document.getElementById('gh-token').value.trim()
+        };
+    }
+
+    const LIST_BTN_IDS = { 'tma-posts': 'btn-tma-posts', 'web-posts': 'btn-web-posts' };
+    const LIST_BTN_LABELS = { 'tma-posts': 'TMA পোস্ট', 'web-posts': 'Web পোস্ট' };
+
+    function updateListButtonLabel(dir) {
+        const btn = document.getElementById(LIST_BTN_IDS[dir]);
+        if (!btn) return;
+        const isShown = _loadedPosts.hasOwnProperty(dir);
+        btn.textContent = isShown ? `✕ ${LIST_BTN_LABELS[dir]} সরাও` : `${LIST_BTN_LABELS[dir]} লোড করো`;
+    }
+
+    async function loadPostList(dir) {
+        // Toggle off: if this directory's posts are already showing, clicking again clears them.
+        if (_loadedPosts.hasOwnProperty(dir)) {
+            delete _loadedPosts[dir];
+            delete _listState[dir];
+            if (_editState && _editState.dir === dir) cancelEdit();
+            renderAllLoadedLists();
+            updateListButtonLabel(dir);
+            return;
+        }
+
+        const { owner, repo, branch, token } = getGithubCreds();
+        if (!owner || !repo || !token) {
+            alert('আগে Owner, Repo, আর Token দাও।');
+            return;
+        }
+
+        _loadedPosts[dir] = [];
+        _listState[dir] = { totalPages: 0, pagesLoaded: 0, loading: true };
+        updateListButtonLabel(dir);
+        renderAllLoadedLists();
+
+        try {
+            const manifestFile = await ghGetFile(owner, repo, `${dir}/manifest.json`, branch, token);
+            const manifest = manifestFile ? JSON.parse(manifestFile.content) : { totalPages: 0 };
+            _listState[dir].totalPages = manifest.totalPages || 0;
+            _listState[dir].loading = false;
+
+            if (_listState[dir].totalPages === 0) {
+                renderAllLoadedLists();
+                return;
+            }
+            await loadNextListPage(dir);
+        } catch (err) {
+            console.error(err);
+            delete _loadedPosts[dir];
+            delete _listState[dir];
+            updateListButtonLabel(dir);
+            renderAllLoadedLists();
+            alert(`${dir} লোড ব্যর্থ হয়েছে: ${err.message}`);
+        }
+    }
+
+    /* Loads exactly one more page for a directory, newest page first (mirrors the
+       live site's newest-first order: highest page number = most recently added). */
+    async function loadNextListPage(dir) {
+        const { owner, repo, branch, token } = getGithubCreds();
+        const state = _listState[dir];
+        if (!state || state.loading || state.pagesLoaded >= state.totalPages) return;
+
+        state.loading = true;
+        renderAllLoadedLists();
+
+        const pageToLoad = state.totalPages - state.pagesLoaded;
+        try {
+            const pageFile = await ghGetFile(owner, repo, `${dir}/page-${pageToLoad}.json`, branch, token);
+            const posts = pageFile ? JSON.parse(pageFile.content) : [];
+            const ordered = (Array.isArray(posts) ? posts.slice().reverse() : []).map(p => ({ ...p, _page: pageToLoad }));
+            _loadedPosts[dir] = (_loadedPosts[dir] || []).concat(ordered);
+            state.pagesLoaded++;
+        } catch (err) {
+            console.error(err);
+            alert(`page-${pageToLoad}.json লোড ব্যর্থ হয়েছে: ${err.message}`);
+        } finally {
+            state.loading = false;
+            renderAllLoadedLists();
+        }
+    }
+
+    function renderAllLoadedLists() {
+        const container = document.getElementById('post-list-container');
+        const dirs = Object.keys(_loadedPosts);
+        if (dirs.length === 0) { container.innerHTML = ''; return; }
+
+        container.innerHTML = dirs.map(dir => {
+            const posts = _loadedPosts[dir];
+            const state = _listState[dir] || { totalPages: 0, pagesLoaded: 0, loading: false };
+
+            if (state.loading && posts.length === 0) {
+                return `<div class="post-list-group"><div class="post-list-group-title">${dir}</div><div class="empty-hint">⏳ লোড হচ্ছে...</div></div>`;
+            }
+            if (posts.length === 0 && state.pagesLoaded >= state.totalPages) {
+                return `<div class="post-list-group"><div class="post-list-group-title">${dir} (0)</div><div class="empty-hint">কোনো পোস্ট নেই।</div></div>`;
+            }
+
+            const cards = posts.map(p => `
+                <div class="grid-card">
+                    <div class="grid-thumb"><img src="${escapeHTML(p.image)}" onerror="this.style.opacity=0.15" /></div>
+                    <div class="grid-body">
+                        <div class="grid-title">${escapeHTML(p.title || '(No title)')}</div>
+                        <div class="grid-meta">${escapeHTML(p.id)}${p.totalTasks ? ' · T:' + p.totalTasks : ''}</div>
+                        <div class="grid-actions">
+                            <button class="grid-btn edit" data-action="edit" data-dir="${escapeHTML(dir)}" data-id="${escapeHTML(p.id)}">Edit</button>
+                            <button class="grid-btn danger" data-action="delete" data-dir="${escapeHTML(dir)}" data-id="${escapeHTML(p.id)}">Del</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            const hasMore = state.pagesLoaded < state.totalPages;
+            const loadMore = hasMore
+                ? `<button class="load-more-btn" data-action="load-more" data-dir="${escapeHTML(dir)}" ${state.loading ? 'disabled' : ''}>${state.loading ? '⏳ লোড হচ্ছে...' : `⬇ আরও পুরনো পোস্ট লোড করো (${state.pagesLoaded}/${state.totalPages} পেজ হয়েছে)`}</button>`
+                : (posts.length > 0 ? `<div class="empty-hint" style="text-align:center;">— সবগুলো লোড হয়ে গেছে —</div>` : '');
+
+            return `<div class="post-list-group"><div class="post-list-group-title">${dir} (${posts.length}${hasMore ? '+' : ''})</div><div class="post-grid">${cards}</div>${loadMore}</div>`;
+        }).join('');
+    }
+
+    document.getElementById('post-list-container').addEventListener('click', (e) => {
+        const editBtn = e.target.closest('[data-action="edit"]');
+        const delBtn = e.target.closest('[data-action="delete"]');
+        const moreBtn = e.target.closest('[data-action="load-more"]');
+        if (editBtn) startEditPost(editBtn.dataset.dir, editBtn.dataset.id);
+        if (delBtn) deletePost(delBtn.dataset.dir, delBtn.dataset.id);
+        if (moreBtn) loadNextListPage(moreBtn.dataset.dir);
+    });
+
+    /* === Edit an existing post: load its fields into the form === */
+    function startEditPost(dir, id) {
+        const post = (_loadedPosts[dir] || []).find(p => p.id === id);
+        if (!post) return;
+
+        _editState = { dir, id, page: post._page };
+
+        document.getElementById('title').value = post.title || '';
+        document.getElementById('image').value = post.image || '';
+        document.getElementById('link').value = post.targetLink || '';
+        document.getElementById('tasks').value = post.totalTasks || '';
+        document.getElementById('duration').value = post.duration || '';
+        if (post.uploadDate) {
+            const d = new Date(post.uploadDate);
+            document.getElementById('uploadDate').value = new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+        }
+        updateImagePreview();
+        updateCardPreview();
+
+        const bothModeEl = document.getElementById('both-mode');
+        bothModeEl.checked = false;
+        bothModeEl.disabled = true;
+
+        document.getElementById('edit-banner').style.display = 'flex';
+        document.getElementById('edit-banner-text').textContent = `✏️ এডিট করছ: "${post.title || id}" (${dir}, ID: ${id})`;
+        document.getElementById('push-btn').textContent = '💾 Update Post';
+        document.getElementById('generate-only-btn').style.display = 'none';
+
+        document.getElementById('title').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function cancelEdit() {
+        _editState = null;
+        const bothModeEl = document.getElementById('both-mode');
+        bothModeEl.checked = false;
+        bothModeEl.disabled = false;
+        document.getElementById('edit-banner').style.display = 'none';
+        document.getElementById('push-btn').textContent = '🚀 Generate & Push to GitHub';
+        document.getElementById('generate-only-btn').style.display = 'block';
+        ['title', 'image', 'link', 'tasks', 'duration'].forEach(id => document.getElementById(id).value = '');
+        updateImagePreview();
+        updateCardPreview();
+        document.getElementById('image-upload-status').textContent = '';
+    }
+
+    async function saveEditedPost() {
+        const { owner, repo, branch, token } = getGithubCreds();
+        const { dir, id, page } = _editState;
+
+        resetStatus();
+        if (!owner || !repo || !token) {
+            logStatus('⚠️ Owner, Repo, আর Token — তিনটাই লাগবে।', 'err');
+            return;
+        }
+
+        const image = document.getElementById('image').value;
+        const targetLink = document.getElementById('link').value;
+        if (!image || !targetLink) {
+            logStatus('⚠️ Image URL আর Target Link অবশ্যই দিতে হবে।', 'err');
+            return;
+        }
+
+        const updatedObj = { id, image, targetLink };
+        const title = document.getElementById('title').value;
+        if (title) updatedObj.title = title;
+        const tasksVal = document.getElementById('tasks').value;
+        if (dir === 'tma-posts' && tasksVal) updatedObj.totalTasks = parseInt(tasksVal);
+        const duration = document.getElementById('duration').value;
+        if (duration) updatedObj.duration = duration;
+        const uploadDateVal = document.getElementById('uploadDate').value;
+        if (uploadDateVal) updatedObj.uploadDate = new Date(uploadDateVal).toISOString();
+
+        showOutput([{ dir, obj: updatedObj }]);
+
+        const pushBtn = document.getElementById('push-btn');
+        pushBtn.disabled = true;
+        const originalLabel = pushBtn.textContent;
+        pushBtn.textContent = 'সেভ হচ্ছে...';
+
+        try {
+            const pagePath = `${dir}/page-${page}.json`;
+            logStatus(`⏳ [${dir}] ${pagePath} পড়া হচ্ছে...`, 'info');
+            const pageFile = await ghGetFile(owner, repo, pagePath, branch, token);
+            let posts = pageFile ? JSON.parse(pageFile.content) : [];
+            const idx = posts.findIndex(p => p.id === id);
+            if (idx === -1) throw new Error(`পোস্ট "${id}" ${pagePath}-এ খুঁজে পাওয়া যায়নি — লিস্ট আবার লোড করে চেষ্টা করো।`);
+            posts[idx] = updatedObj;
+
+            const pageContent = JSON.stringify(posts, null, 2) + '\n';
+            logStatus(`⏳ [${dir}] ${pagePath} আপডেট করা হচ্ছে...`, 'info');
+            await ghPutFile(owner, repo, pagePath, branch, token, pageContent, `Update post ${id} in ${pagePath}`, pageFile.sha);
+            logStatus(`✅ [${dir}] পোস্ট "${id}" সফলভাবে আপডেট হয়েছে।`, 'ok');
+
+            if (_loadedPosts[dir]) {
+                const cacheIdx = _loadedPosts[dir].findIndex(p => p.id === id);
+                if (cacheIdx !== -1) _loadedPosts[dir][cacheIdx] = { ...updatedObj, _page: page };
+                renderAllLoadedLists();
+            }
+
+            cancelEdit();
+        } catch (err) {
+            console.error(err);
+            logStatus(`❌ ব্যর্থ হয়েছে: ${err.message}`, 'err');
+        } finally {
+            pushBtn.disabled = false;
+            pushBtn.textContent = _editState ? '💾 Update Post' : '🚀 Generate & Push to GitHub';
+        }
+    }
+
+    /* === Delete an existing post from its page file + manifest === */
+    async function deletePost(dir, id) {
+        const { owner, repo, branch, token } = getGithubCreds();
+        if (!owner || !repo || !token) {
+            alert('আগে Owner, Repo, আর Token দাও।');
+            return;
+        }
+
+        const post = (_loadedPosts[dir] || []).find(p => p.id === id);
+        if (!post) return;
+
+        const ok = confirm(`পোস্ট "${post.title || id}" (${dir}) ডিলিট করবে? এটা ফেরানো যাবে না।`);
+        if (!ok) return;
+
+        resetStatus();
+        try {
+            const page = post._page;
+            const pagePath = `${dir}/page-${page}.json`;
+            logStatus(`⏳ [${dir}] ${pagePath} পড়া হচ্ছে...`, 'info');
+            const pageFile = await ghGetFile(owner, repo, pagePath, branch, token);
+            let posts = pageFile ? JSON.parse(pageFile.content) : [];
+            const idx = posts.findIndex(p => p.id === id);
+            if (idx === -1) throw new Error(`পোস্ট "${id}" খুঁজে পাওয়া যায়নি — লিস্ট আবার লোড করো।`);
+            posts.splice(idx, 1);
+
+            const pageContent = JSON.stringify(posts, null, 2) + '\n';
+            logStatus(`⏳ [${dir}] ${pagePath} থেকে পোস্ট সরানো হচ্ছে...`, 'info');
+            await ghPutFile(owner, repo, pagePath, branch, token, pageContent, `Delete post ${id} from ${pagePath}`, pageFile.sha);
+            logStatus(`✅ [${dir}] ${pagePath} আপডেট হয়েছে।`, 'ok');
+
+            const manifestPath = `${dir}/manifest.json`;
+            logStatus(`⏳ [${dir}] ${manifestPath} পড়া হচ্ছে...`, 'info');
+            const manifestFile = await ghGetFile(owner, repo, manifestPath, branch, token);
+            let manifest = manifestFile ? JSON.parse(manifestFile.content) : { totalPages: 0, pageSize: 20, totalPosts: 0, postPages: {} };
+            const newPostPages = { ...(manifest.postPages || {}) };
+            delete newPostPages[id];
+            const newManifest = {
+                totalPages: manifest.totalPages || 0,
+                pageSize: manifest.pageSize || 20,
+                totalPosts: Math.max(0, (manifest.totalPosts || 0) - 1),
+                postPages: newPostPages
+            };
+            const manifestContent = JSON.stringify(newManifest, null, 2) + '\n';
+            logStatus(`⏳ [${dir}] ${manifestPath} আপডেট করা হচ্ছে...`, 'info');
+            await ghPutFile(owner, repo, manifestPath, branch, token, manifestContent, `Remove post ${id} from manifest`, manifestFile ? manifestFile.sha : undefined);
+            logStatus(`✅ [${dir}] পোস্ট "${id}" সম্পূর্ণভাবে ডিলিট হয়েছে।`, 'ok');
+
+            _loadedPosts[dir] = (_loadedPosts[dir] || []).filter(p => p.id !== id);
+            renderAllLoadedLists();
+
+            if (_editState && _editState.dir === dir && _editState.id === id) cancelEdit();
+        } catch (err) {
+            console.error(err);
+            logStatus(`❌ [${dir}] ডিলিট ব্যর্থ: ${err.message}`, 'err');
+        }
+    }
+
+    /* === Main flow: generate one or two post objects, push each directory in turn === */
+    async function pushToGithub() {
+        if (_editState) {
+            await saveEditedPost();
+            return;
+        }
+
+        const owner  = document.getElementById('gh-owner').value.trim();
+        const repo   = document.getElementById('gh-repo').value.trim();
+        const branch = document.getElementById('gh-branch').value.trim() || 'main';
+        const token  = document.getElementById('gh-token').value.trim();
+        const bothMode = document.getElementById('both-mode').checked;
+        const tasksVal = document.getElementById('tasks').value;
+
+        resetStatus();
+
+        if (!owner || !repo || !token) {
+            logStatus('⚠️ Owner, Repo, আর Token — তিনটাই লাগবে।', 'err');
+            return;
+        }
+        if (bothMode && !tasksVal) {
+            logStatus('⚠️ উভয় মোডে পোস্ট করতে হলে Task Limit দিতে হবে (TMA কপির জন্য) — খালি রাখলে চলবে না।', 'err');
+            return;
+        }
+
+        const entries = buildPostObjects();
+        if (!entries[0].obj.image || !entries[0].obj.targetLink) {
+            logStatus('⚠️ Image URL আর Target Link অবশ্যই দিতে হবে।', 'err');
+            return;
+        }
+        showOutput(entries);
+
+        const pushBtn = document.getElementById('push-btn');
+        pushBtn.disabled = true;
+        const originalLabel = pushBtn.textContent;
+        pushBtn.textContent = 'পুশ হচ্ছে...';
+
+        let anyFail = false;
+        for (const entry of entries) {
+            try {
+                await pushOneDirectory(owner, repo, branch, token, entry.dir, entry.obj);
+            } catch (err) {
+                anyFail = true;
+                console.error(err);
+                logStatus(`❌ [${entry.dir}] ব্যর্থ হয়েছে: ${err.message}`, 'err');
+            }
+        }
+
+        if (anyFail) {
+            logStatus('Owner/Repo/Branch ঠিক আছে কিনা, আর টোকেনে এই রিপোর জন্য "Contents: Read and write" পারমিশন আছে কিনা যাচাই করুন।', 'err');
+        } else {
+            logStatus(`✨ সবগুলো পোস্ট সফলভাবে পাবলিশ হয়েছে। GitHub Pages রিফ্রেশ হতে ১-২ মিনিট লাগতে পারে।`, 'ok');
+        }
+
+        pushBtn.disabled = false;
+        pushBtn.textContent = originalLabel;
     }
 
     function copyToClipboard() {
@@ -78,4 +1023,3 @@
 </script>
 </body>
 </html>
-  
