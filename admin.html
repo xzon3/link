@@ -65,6 +65,7 @@
         .grid-actions { display: flex; gap: 4px; }
         .grid-btn { flex: 1; width: auto; padding: 5px 0; margin: 0; font-size: 9.5px; font-weight: bold; border-radius: 6px; text-align: center; border: none; cursor: pointer; }
         .grid-btn.edit { background: #2a2a3a; color: var(--gold); }
+        .grid-btn.share { background: rgba(0,229,200,0.14); color: var(--teal); }
         .grid-btn.danger { background: rgba(255,77,126,0.14); color: var(--rose); }
         .load-more-btn { margin-top: 12px; background: #1a1a24; color: var(--gold); border: 1px solid rgba(212,168,67,0.25); font-size: 12px; padding: 12px; }
         .edit-banner { display: none; align-items: center; justify-content: space-between; gap: 10px; background: rgba(212,168,67,0.1); border: 1px solid rgba(212,168,67,0.35); border-radius: 10px; padding: 10px 14px; margin-bottom: 16px; font-size: 12.5px; color: var(--gold); }
@@ -85,7 +86,7 @@
     </div>
     <div class="grid">
         <div class="field"><label>Repo Owner</label><input type="text" id="gh-owner" value="xzon3"></div>
-        <div class="field"><label>Repo Name</label><input type="text" id="gh-repo" value="link"></div>
+        <div class="field"><label>Repo Name</label><input type="text" id="gh-repo" value="test"></div>
         <div class="field"><label>Branch</label><input type="text" id="gh-branch" value="main"></div>
         <div class="field"><label>Personal Access Token</label><input type="password" id="gh-token" placeholder="ghp_... / github_pat_..."></div>
     </div>
@@ -194,6 +195,46 @@
             id.push(pool[Math.floor(Math.random() * pool.length)]);
         }
         return id.sort(() => Math.random() - 0.5).join('');
+    }
+
+    /* === Share a post straight from the management grid ===
+       Same deep-link format the live site uses (t.me/<bot>/<app>?startapp=post_<id>),
+       so opening it launches the Telegram Mini App directly at that post. */
+    const TELEGRAM_BOT_USERNAME = 'xzon3_robot';
+    const TELEGRAM_APP_NAME = 'Xzon3';
+
+    function buildPostShareURL(id) {
+        return `https://t.me/${TELEGRAM_BOT_USERNAME}/${TELEGRAM_APP_NAME}?startapp=post_${encodeURIComponent(id)}`;
+    }
+
+    function flashButton(btnEl, tempText, ms = 1500) {
+        if (!btnEl) return;
+        const original = btnEl.textContent;
+        btnEl.textContent = tempText;
+        btnEl.disabled = true;
+        setTimeout(() => { btnEl.textContent = original; btnEl.disabled = false; }, ms);
+    }
+
+    async function sharePostFromAdmin(id, title, btnEl) {
+        const shareUrl = buildPostShareURL(id);
+        const shareText = title ? `Check this out: ${title}` : 'Check this out!';
+
+        if (navigator.share) {
+            try {
+                await navigator.share({ title: shareText, url: shareUrl });
+            } catch (err) {
+                // user cancelled the share sheet — nothing to do
+            }
+            return;
+        }
+
+        try {
+            await navigator.clipboard.writeText(shareUrl);
+            flashButton(btnEl, '✅ Copied');
+        } catch (err) {
+            console.error(err);
+            alert(shareUrl); // last resort so the link is still visible/copyable
+        }
     }
 
     /* === Direct image upload (commits the file straight into the repo's /images/ folder) === */
@@ -768,6 +809,7 @@
                         <div class="grid-meta">${escapeHTML(p.id)}${p.totalTasks ? ' · T:' + p.totalTasks : ''}</div>
                         <div class="grid-actions">
                             <button class="grid-btn edit" data-action="edit" data-dir="${escapeHTML(dir)}" data-id="${escapeHTML(p.id)}">Edit</button>
+                            <button class="grid-btn share" data-action="share" data-id="${escapeHTML(p.id)}" data-title="${escapeHTML(p.title || '')}">Share</button>
                             <button class="grid-btn danger" data-action="delete" data-dir="${escapeHTML(dir)}" data-id="${escapeHTML(p.id)}">Del</button>
                         </div>
                     </div>
@@ -785,9 +827,11 @@
 
     document.getElementById('post-list-container').addEventListener('click', (e) => {
         const editBtn = e.target.closest('[data-action="edit"]');
+        const shareBtn = e.target.closest('[data-action="share"]');
         const delBtn = e.target.closest('[data-action="delete"]');
         const moreBtn = e.target.closest('[data-action="load-more"]');
         if (editBtn) startEditPost(editBtn.dataset.dir, editBtn.dataset.id);
+        if (shareBtn) sharePostFromAdmin(shareBtn.dataset.id, shareBtn.dataset.title, shareBtn);
         if (delBtn) deletePost(delBtn.dataset.dir, delBtn.dataset.id);
         if (moreBtn) loadNextListPage(moreBtn.dataset.dir);
     });
