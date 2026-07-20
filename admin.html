@@ -35,7 +35,7 @@
 
         .image-input-row { display: flex; gap: 8px; }
         .image-input-row input[type="text"] { flex: 1; }
-        .upload-icon-btn { width: auto; flex-shrink: 0; margin: 0; padding: 0 16px; background: #222; color: var(--gold); border-radius: 10px; font-size: 16px; }
+        .upload-icon-btn { width: auto; flex-shrink: 0; margin: 0; padding: 12px 16px; background: #222; color: var(--gold); border-radius: 10px; font-size: 16px; display: inline-flex; align-items: center; justify-content: center; }
         .upload-icon-btn:hover { background: #2a2a3a; }
         .upload-icon-btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .upload-status { font-size: 11px; margin-top: 6px; min-height: 14px; line-height: 1.5; }
@@ -106,7 +106,9 @@
             <label>Image URL</label>
             <div class="image-input-row">
                 <input type="text" id="image" oninput="updateImagePreview(); updateCardPreview();">
-                <button type="button" class="upload-icon-btn" id="image-upload-btn" onclick="document.getElementById('image-file').click()" title="ছবি আপলোড করো">📤</button>
+                <button type="button" class="upload-icon-btn" id="image-upload-btn" onclick="document.getElementById('image-file').click()" title="ছবি আপলোড করো">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                </button>
             </div>
             <input type="file" id="image-file" accept="image/*" style="display:none;" onchange="handleImageFileSelect(event)">
             <div id="image-upload-status" class="upload-status"></div>
