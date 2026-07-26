@@ -67,6 +67,8 @@
         .grid-btn { flex: 1; width: auto; padding: 5px 0; margin: 0; font-size: 9.5px; font-weight: bold; border-radius: 6px; text-align: center; border: none; cursor: pointer; }
         .grid-btn.edit { background: #2a2a3a; color: var(--gold); }
         .grid-btn.share { background: rgba(0,229,200,0.14); color: var(--teal); }
+        .grid-btn.copy { background: rgba(212,168,67,0.14); color: var(--gold); }
+        .grid-btn.copy.copied { background: rgba(0,229,200,0.2); color: var(--teal); }
         .grid-btn.danger { background: rgba(255,77,126,0.14); color: var(--rose); }
         .load-more-btn { margin-top: 12px; background: #1a1a24; color: var(--gold); border: 1px solid rgba(212,168,67,0.25); font-size: 12px; padding: 12px; }
         .edit-banner { display: none; align-items: center; justify-content: space-between; gap: 10px; background: rgba(212,168,67,0.1); border: 1px solid rgba(212,168,67,0.35); border-radius: 10px; padding: 10px 14px; margin-bottom: 16px; font-size: 12.5px; color: var(--gold); }
@@ -468,6 +470,7 @@
                     <div class="grid-title">${escapeHTML(f.name)}</div>
                     <div class="grid-meta">${(f.size / 1024).toFixed(0)} KB</div>
                     <div class="grid-actions">
+                        <button class="grid-btn copy" data-action="copy-image-link" data-url="${escapeHTML(f.download_url)}">Copy</button>
                         <button class="grid-btn danger" data-action="delete-image" data-path="${escapeHTML(f.path)}" data-sha="${escapeHTML(f.sha)}" data-name="${escapeHTML(f.name)}">Del</button>
                     </div>
                 </div>
@@ -523,9 +526,38 @@
         }
     }
 
+    async function copyImageLink(url, btnEl) {
+        try {
+            if (navigator.clipboard && window.isSecureContext) {
+                await navigator.clipboard.writeText(url);
+            } else {
+                const ta = document.createElement('textarea');
+                ta.value = url;
+                ta.style.position = 'fixed';
+                ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.focus();
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+            }
+            if (btnEl) {
+                const original = btnEl.textContent;
+                btnEl.textContent = '✓ Copied';
+                btnEl.classList.add('copied');
+                setTimeout(() => { btnEl.textContent = original; btnEl.classList.remove('copied'); }, 1200);
+            }
+        } catch (err) {
+            console.error(err);
+            alert(`কপি করা যায়নি — লিংকটি ম্যানুয়ালি কপি করো:\n${url}`);
+        }
+    }
+
     document.getElementById('image-list-container').addEventListener('click', (e) => {
         const delBtn = e.target.closest('[data-action="delete-image"]');
-        if (delBtn) deleteImage(delBtn.dataset.path, delBtn.dataset.sha, delBtn.dataset.name);
+        if (delBtn) { deleteImage(delBtn.dataset.path, delBtn.dataset.sha, delBtn.dataset.name); return; }
+        const copyBtn = e.target.closest('[data-action="copy-image-link"]');
+        if (copyBtn) copyImageLink(copyBtn.dataset.url, copyBtn);
     });
 
     /* Builds shared fields once, then returns either one entry (normal mode)
