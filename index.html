@@ -460,16 +460,33 @@
 
     /* === TMA Module === */
 
+    /* Lightweight tamper check for TMA task progress. This is NOT real security —
+       anyone reading this source can recompute the checksum — but it stops the
+       common case of someone opening DevTools' Application tab and editing the
+       stored count/unlockedAt directly without reading any code. A mismatched
+       or out-of-range value is treated as invalid and the progress resets. */
+    function tmaChecksum(postId, count, unlockedAt) {
+      const raw = `${postId}:${count}:${unlockedAt || 0}:xzon3-tma-salt`;
+      let hash = 0;
+      for (let i = 0; i < raw.length; i++) { hash = ((hash << 5) - hash + raw.charCodeAt(i)) | 0; }
+      return hash.toString(36);
+    }
+
     function getTMAProgress(postId) {
       try {
         const raw = localStorage.getItem(`tma_progress_${postId}`);
         if (!raw) return { count: 0, unlockedAt: null };
-        return JSON.parse(raw);
+        const data = JSON.parse(raw);
+        const valid = typeof data.count === 'number' && data.count >= 0 && data.count <= 99 &&
+          data._c === tmaChecksum(postId, data.count, data.unlockedAt);
+        if (!valid) return { count: 0, unlockedAt: null };
+        return { count: data.count, unlockedAt: data.unlockedAt };
       } catch { return { count: 0, unlockedAt: null }; }
     }
 
     function saveTMAProgress(postId, data) {
-      try { localStorage.setItem(`tma_progress_${postId}`, JSON.stringify(data)); } catch (e) { console.warn('[TMA] localStorage write failed:', e); }
+      const record = { count: data.count, unlockedAt: data.unlockedAt, _c: tmaChecksum(postId, data.count, data.unlockedAt) };
+      try { localStorage.setItem(`tma_progress_${postId}`, JSON.stringify(record)); } catch (e) { console.warn('[TMA] localStorage write failed:', e); }
     }
 
     function resetTMAProgress(postId) { saveTMAProgress(postId, { count: 0, unlockedAt: null }); }
