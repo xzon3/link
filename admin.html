@@ -74,6 +74,23 @@
         .edit-banner { display: none; align-items: center; justify-content: space-between; gap: 10px; background: rgba(212,168,67,0.1); border: 1px solid rgba(212,168,67,0.35); border-radius: 10px; padding: 10px 14px; margin-bottom: 16px; font-size: 12.5px; color: var(--gold); }
         .edit-banner button { width: auto; margin: 0; padding: 6px 12px; font-size: 11px; background: transparent; border: 1px solid rgba(212,168,67,0.5); color: var(--gold); }
         .empty-hint { font-size: 12px; color: #7a7588; padding: 8px 0; }
+
+        /* Toast + confirm modal (replaces native alert/confirm) */
+        #toast-stack { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); display: flex; flex-direction: column; gap: 8px; align-items: center; z-index: 999; width: 100%; padding: 0 16px; pointer-events: none; }
+        .toast { pointer-events: auto; background: #14141c; border: 1px solid #2a2a3a; border-left: 3px solid var(--gold); color: var(--text); padding: 12px 15px; border-radius: 10px; font-size: 13px; max-width: 420px; width: 100%; box-shadow: 0 8px 24px rgba(0,0,0,0.4); opacity: 0; transform: translateY(10px); animation: toast-in 0.25s ease forwards; display: flex; align-items: flex-start; gap: 8px; line-height: 1.5; }
+        .toast.success { border-left-color: var(--teal); }
+        .toast.error { border-left-color: var(--rose); }
+        .toast.hide { animation: toast-out 0.22s ease forwards; }
+        @keyframes toast-in { to { opacity: 1; transform: translateY(0); } }
+        @keyframes toast-out { to { opacity: 0; transform: translateY(-6px); } }
+        #modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.65); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+        #modal-overlay.visible { display: flex; }
+        .modal-card { background: var(--card); border: 1px solid #2a2a3a; border-radius: 14px; padding: 20px; max-width: 340px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+        .modal-card p { font-size: 13.5px; line-height: 1.6; margin: 0 0 16px; color: var(--text); }
+        .modal-actions { display: flex; gap: 10px; }
+        .modal-actions button { flex: 1; width: auto; margin: 0; padding: 12px; border-radius: 9px; font-size: 13px; }
+        .modal-cancel { background: #1e1e28 !important; color: var(--text) !important; border: 1px solid #333; }
+        .modal-confirm { background: var(--rose) !important; color: #fff !important; }
     </style>
 </head>
 <body>
@@ -169,6 +186,17 @@
     <div id="image-list-container" style="margin-top:16px;"></div>
 </div>
 
+<div id="toast-stack"></div>
+<div id="modal-overlay">
+    <div class="modal-card">
+        <p id="modal-message"></p>
+        <div class="modal-actions">
+            <button class="modal-cancel" id="modal-cancel-btn">বাতিল</button>
+            <button class="modal-confirm" id="modal-confirm-btn">ডিলিট করো</button>
+        </div>
+    </div>
+</div>
+
 <script>
     (function prefillUploadDate() {
         const d = new Date(Date.now() - new Date().getTimezoneOffset() * 60000);
@@ -212,6 +240,37 @@
         return `https://t.me/${TELEGRAM_BOT_USERNAME}/${TELEGRAM_APP_NAME}?startapp=post_${encodeURIComponent(id)}`;
     }
 
+    function showToast(message, type = 'info', duration = 3200) {
+        const stack = document.getElementById('toast-stack');
+        const el = document.createElement('div');
+        el.className = `toast ${type}`;
+        const icon = type === 'success' ? '✅' : type === 'error' ? '⚠️' : 'ℹ️';
+        el.innerHTML = `<span>${icon}</span><span>${message}</span>`;
+        stack.appendChild(el);
+        setTimeout(() => {
+            el.classList.add('hide');
+            setTimeout(() => el.remove(), 250);
+        }, duration);
+    }
+
+    function showConfirmModal(message, confirmLabel = 'ডিলিট করো') {
+        return new Promise((resolve) => {
+            const overlay = document.getElementById('modal-overlay');
+            document.getElementById('modal-message').textContent = message;
+            document.getElementById('modal-confirm-btn').textContent = confirmLabel;
+            overlay.classList.add('visible');
+            const cancelBtn = document.getElementById('modal-cancel-btn');
+            const confirmBtn = document.getElementById('modal-confirm-btn');
+            const cleanup = (result) => {
+                overlay.classList.remove('visible');
+                cancelBtn.onclick = null; confirmBtn.onclick = null;
+                resolve(result);
+            };
+            cancelBtn.onclick = () => cleanup(false);
+            confirmBtn.onclick = () => cleanup(true);
+        });
+    }
+
     function flashButton(btnEl, tempText, ms = 1500) {
         if (!btnEl) return;
         const original = btnEl.textContent;
@@ -238,7 +297,7 @@
             flashButton(btnEl, '✅ Copied');
         } catch (err) {
             console.error(err);
-            alert(shareUrl); // last resort so the link is still visible/copyable
+            showToast(`কপি করা যায়নি — লিংকটি: ${shareUrl}`, 'error', 6000);
         }
     }
 
@@ -377,7 +436,7 @@
 
         const { owner, repo, branch, token } = getGithubCreds();
         if (!owner || !repo || !token) {
-            alert('আগে Owner, Repo, আর Token দাও।');
+            showToast('আগে Owner, Repo, আর Token দাও।', 'error');
             fileInput.value = '';
             return;
         }
@@ -488,7 +547,7 @@
         }
         const { owner, repo, branch, token } = getGithubCreds();
         if (!owner || !repo || !token) {
-            alert('আগে Owner, Repo, আর Token দাও।');
+            showToast('আগে Owner, Repo, আর Token দাও।', 'error');
             return;
         }
         _imagesLoading = true;
@@ -499,7 +558,7 @@
         } catch (err) {
             console.error(err);
             _loadedImages = [];
-            alert(`ছবি লোড ব্যর্থ হয়েছে: ${err.message}`);
+            showToast(`ছবি লোড ব্যর্থ হয়েছে: ${err.message}`, 'error');
         } finally {
             _imagesLoading = false;
             updateImagesButtonLabel();
@@ -510,10 +569,10 @@
     async function deleteImage(path, sha, name) {
         const { owner, repo, branch, token } = getGithubCreds();
         if (!owner || !repo || !token) {
-            alert('আগে Owner, Repo, আর Token দাও।');
+            showToast('আগে Owner, Repo, আর Token দাও।', 'error');
             return;
         }
-        const ok = confirm(`"${name}" ডিলিট করবে? মনে রেখো — কোনো পোস্ট এই ছবিটা ব্যবহার করলে সেই পোস্টের থাম্বনেইল ভেঙে যাবে। এটা ফেরানো যাবে না।`);
+        const ok = await showConfirmModal(`"${name}" ডিলিট করবে? মনে রেখো — কোনো পোস্ট এই ছবিটা ব্যবহার করলে সেই পোস্টের থাম্বনেইল ভেঙে যাবে। এটা ফেরানো যাবে না।`);
         if (!ok) return;
 
         try {
@@ -522,7 +581,7 @@
             renderImageList();
         } catch (err) {
             console.error(err);
-            alert(`ডিলিট ব্যর্থ হয়েছে: ${err.message}`);
+            showToast(`ডিলিট ব্যর্থ হয়েছে: ${err.message}`, 'error');
         }
     }
 
@@ -549,7 +608,7 @@
             }
         } catch (err) {
             console.error(err);
-            alert(`কপি করা যায়নি — লিংকটি ম্যানুয়ালি কপি করো:\n${url}`);
+            showToast(`কপি করা যায়নি — লিংকটি: ${url}`, 'error', 6000);
         }
     }
 
@@ -765,7 +824,7 @@
 
         const { owner, repo, branch, token } = getGithubCreds();
         if (!owner || !repo || !token) {
-            alert('আগে Owner, Repo, আর Token দাও।');
+            showToast('আগে Owner, Repo, আর Token দাও।', 'error');
             return;
         }
 
@@ -791,7 +850,7 @@
             delete _listState[dir];
             updateListButtonLabel(dir);
             renderAllLoadedLists();
-            alert(`${dir} লোড ব্যর্থ হয়েছে: ${err.message}`);
+            showToast(`${dir} লোড ব্যর্থ হয়েছে: ${err.message}`, 'error');
         }
     }
 
@@ -814,7 +873,7 @@
             state.pagesLoaded++;
         } catch (err) {
             console.error(err);
-            alert(`page-${pageToLoad}.json লোড ব্যর্থ হয়েছে: ${err.message}`);
+            showToast(`page-${pageToLoad}.json লোড ব্যর্থ হয়েছে: ${err.message}`, 'error');
         } finally {
             state.loading = false;
             renderAllLoadedLists();
@@ -985,14 +1044,14 @@
     async function deletePost(dir, id) {
         const { owner, repo, branch, token } = getGithubCreds();
         if (!owner || !repo || !token) {
-            alert('আগে Owner, Repo, আর Token দাও।');
+            showToast('আগে Owner, Repo, আর Token দাও।', 'error');
             return;
         }
 
         const post = (_loadedPosts[dir] || []).find(p => p.id === id);
         if (!post) return;
 
-        const ok = confirm(`পোস্ট "${post.title || id}" (${dir}) ডিলিট করবে? এটা ফেরানো যাবে না।`);
+        const ok = await showConfirmModal(`পোস্ট "${post.title || id}" (${dir}) ডিলিট করবে? এটা ফেরানো যাবে না।`);
         if (!ok) return;
 
         resetStatus();
@@ -1098,7 +1157,7 @@
 
     function copyToClipboard() {
         const text = document.getElementById('output').textContent;
-        navigator.clipboard.writeText(text).then(() => alert("Copied to clipboard!"));
+        navigator.clipboard.writeText(text).then(() => showToast('✅ Copied to clipboard!', 'success'));
     }
 </script>
 </body>
