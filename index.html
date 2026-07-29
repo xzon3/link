@@ -6,6 +6,10 @@
   <title>Xzon3 — Unlock Premium Content</title>
   <meta name="description" content="Unlock exclusive viral video content through premium access." />
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=JetBrains+Mono:wght@400;600&display=swap">
+
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
   <script src="https://momrollback.com/d9/4d/a1/d94da12f54b8d70fed06deca7f6b6730.js"></script>
@@ -16,7 +20,6 @@
     html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; } * { -webkit-overflow-scrolling: touch; } body { overscroll-behavior: none; }
     body { background: var(--bg-void); color: var(--text-primary); font-family: var(--font-body); font-size: 15px; line-height: 1.6; min-height: 100dvh; overflow-x: hidden; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; will-change: scroll-position; }
     body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; opacity: 0.4; }
-    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=JetBrains+Mono:wght@400;600&display=swap');
     ::-webkit-scrollbar { width: 3px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
@@ -748,7 +751,7 @@
 
       card.innerHTML = `
         <div class="card-thumb">
-          <img src="${post.image}" alt="${escapeHTML(post.title)}" />
+          <img src="${post.image}" alt="${escapeHTML(post.title)}" loading="lazy" />
           <div class="thumb-overlay"></div>
           <button class="thumb-share" data-action="share" aria-label="Share this post"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14l5-5-5-5"/><path d="M4 20v-7a4 4 0 0 1 4-4h12"/></svg></button>
           <span class="thumb-badge web">Premium</span>
